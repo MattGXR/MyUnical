@@ -16,32 +16,59 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 
 ## Features
 
-- **User Authentication**: Secure login using your Unical credentials, with credentials safely stored in the Keychain.
-- **Dashboard**: A personalized dashboard displaying key academic metrics:
-  - Current GPA (Media)
-  - Earned Credits (CFU)
-  - Recent Grades
-  - Simulation tool for predicting GPA based on potential future grades.
-- **Grades View (Libretto)**:
+- **User Authentication**
+  - Secure login using Unical credentials.
+  - Credentials are safely stored in the iOS Keychain.
+- **Dashboard**
+  - Personalized welcome message.
+  - Displays current GPA (Media) and earned credits (CFU).
+  - Shows recent grades for quick overview.
+  - Access to the simulation tool for predicting GPA based on potential future grades.
+- **Grades View (Libretto)**
   - Comprehensive list of all grades.
   - Search functionality to filter courses.
   - Detailed view of each grade, including course name, credits, exam date, and score.
-- **Simulation Tool**:
-  - Simulate potential grades to see how they affect your GPA.
-  - Select grade and corresponding credits.
-- **Settings**:
+- **Simulation Tool**
+  - Simulate potential grades to see their impact on GPA.
+  - Select grade and corresponding credits for accurate predictions.
+- **Settings**
   - Manage app settings and preferences.
   - Logout functionality.
+- **Offline Support**
+  - Data caching ensures access to grades and academic information without an internet connection.
+  - Automatically loads the last fetched data when offline.
+- **Data Synchronization**
+  - Silent data fetching upon app launch to update cached data when internet connectivity is available.
 
 ## Screenshots
 
-![Login View](screenshots/login.PNG)
-![Dashboard View](screenshots/dashboard_Redacted.PNG)
-![Dashboard Offline View](screenshots/dashboard_offline_Redacted.PNG)
-![Simulator View](screenshots/simulator.PNG)
-![Libretto View](screenshots/libretto.PNG)
-![Settings View](screenshots/settings_Redacted.PNG)
-![Settings Offline View](screenshots/settings_offline_Redacted.png)
+### Login View
+
+<img src="screenshots/login.PNG" alt="Login View" width="600"/>
+
+### Dashboard View
+
+<img src="screenshots/dashboard_Redacted.PNG" alt="Dashboard View" width="600"/>
+
+### Dashboard Offline View
+
+<img src="screenshots/dashboard_offline_Redacted.PNG" alt="Dashboard Offline View" width="600"/>
+
+### Simulator View
+
+<img src="screenshots/simulator.PNG" alt="Simulator View" width="600"/>
+
+### Libretto View
+
+<img src="screenshots/libretto.PNG" alt="Libretto View" width="600"/>
+
+### Settings View
+
+<img src="screenshots/settings_Redacted.PNG" alt="Settings View" width="600"/>
+
+### Settings Offline View
+
+<img src="screenshots/settings_offline_Redacted.png" alt="Settings Offline View" width="600"/>
 
 
 ## Requirements
@@ -105,6 +132,7 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 - **Credential Storage**: Your credentials are stored securely using the iOS Keychain and are never shared with third parties.
 - **Data Fetching**: The app communicates directly with Unical's official APIs to fetch your academic data.
 - **Personal Data**: Personal information such as your name and academic records are used solely within the app to provide you with accurate and personalized information.
+- **Data Caching**: Fetched data is cached locally in JSON format, ensuring access even without an internet connection.
 
 ## License
 
