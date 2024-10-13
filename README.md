@@ -114,7 +114,6 @@ This project is licensed under the **MyUnical Non-Commercial License**. See the 
 ## Acknowledgements
 
 - **University of Calabria (Unical)**: For providing the APIs to access student data.
-- **OpenAI's ChatGPT**: For assisting in the development and refinement of the app's features and documentation.
 
 ## Contact
 
