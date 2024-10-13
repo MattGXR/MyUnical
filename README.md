@@ -44,7 +44,7 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 
 ### Login View
 
-<img src="screenshots/login.PNG" alt="Login View" width="600"/>
+<img src="screenshots/login.PNG" alt="Login View"  height= "400" width="300"/>
 
 ### Dashboard View
 
