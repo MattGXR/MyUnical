@@ -4,6 +4,9 @@
     "" : {
 
     },
+    "%.1f" : {
+
+    },
     "%@, %@" : {
       "localizations" : {
         "it" : {
@@ -68,6 +71,16 @@
     "Key" : {
       "extractionState" : "manual"
     },
+    "La media prevista non può superare %lld. È stata impostata a %lld." : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "La media prevista non può superare %1$lld. È stata impostata a %2$lld."
+          }
+        }
+      }
+    },
     "Libretto" : {
 
     },
@@ -95,6 +108,9 @@
     "Password" : {
 
     },
+    "Seleziona Valore Lode" : {
+
+    },
     "Simula nuovo voto" : {
 
     },
@@ -105,6 +121,12 @@
 
     },
     "Username" : {
+
+    },
+    "Valore Lode" : {
+
+    },
+    "Valuta Lode" : {
 
     },
     "Visualizza tutti i voti" : {

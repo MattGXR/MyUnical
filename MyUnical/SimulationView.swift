@@ -15,122 +15,201 @@ struct SimulationView: View {
     @State private var predictedAverage: Double?
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var showCappedMessage = false // New State for capping message
     @FocusState private var isInputActive: Bool
-
+    
+    // New State Variables for Valuta Lode
+    @State private var isValutaLode: Bool = false
+    @State private var selectedValutaLode: Double = 33.0 // Default value
+    
     // Allowed CFU values
     let cfuOptions = [3, 6, 9, 12, 15]
-
+    
+    // Valuta Lode options
+    let valutaLodeOptions: [Double] = [33.0, 30.5]
+    
+    // Maximum allowed average
+    let maxAverage: Double = 30.0
+    
     var body: some View {
         NavigationView {
-            VStack(spacing: 15) {
-                Text("Simula nuovo voto")
-                    .font(.title2)
-                    .bold()
-                    .foregroundColor(.primary)
-
-                // Voto Input using Stepper
-                HStack {
-                    Text("Voto: \(newVote)")
-                        .font(.headline)
-                    Spacer()
-                    Stepper(value: $newVote, in: 18...30) {
-                        Text("")
-                    }
-                }
-                .padding()
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(8)
-                .shadow(radius: 2)
-
-                // CFU Input using Picker
-                VStack(alignment: .leading) {
-                    Text("CFU")
-                        .font(.headline)
-                    Picker("CFU", selection: $selectedCFU) {
-                        ForEach(cfuOptions, id: \.self) { cfu in
-                            Text("\(cfu)").tag(cfu)
+            ScrollView { // Changed to ScrollView for better handling on smaller screens
+                VStack(spacing: 15) {
+                    Text("Simula nuovo voto")
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(.primary)
+                    
+                    // Voto Input using Stepper
+                    HStack {
+                        Text("Voto: \(newVote)")
+                            .font(.headline)
+                        Spacer()
+                        Stepper(value: $newVote, in: 18...30) {
+                            Text("")
+                        }
+                        .onChange(of: newVote) { newValue in
+                            // Reset Valuta Lode when newVote changes from 30 to another value
+                            if newValue != 30 && isValutaLode {
+                                isValutaLode = false
+                            }
                         }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
+                    .shadow(radius: 2)
+                    
+                    // CFU Input using Picker
+                    VStack(alignment: .leading) {
+                        Text("CFU")
+                            .font(.headline)
+                        Picker("CFU", selection: $selectedCFU) {
+                            ForEach(cfuOptions, id: \.self) { cfu in
+                                Text("\(cfu)").tag(cfu)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
+                    .shadow(radius: 2)
+                    
+                    // Valuta Lode Toggle
+                    Toggle(isOn: $isValutaLode) {
+                        Text("Valuta Lode")
+                            .font(.headline)
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
+                    .shadow(radius: 2)
+                    // Disable the toggle unless newVote is 30
+                    .disabled(newVote != 30)
+                    // Adjust the opacity to indicate disabled state
+                    .opacity(newVote == 30 ? 1.0 : 0.6)
+                    
+                    // Conditional Dropdown Menu for Valuta Lode
+                    if isValutaLode {
+                        VStack(alignment: .leading) {
+                            Text("Seleziona Valore Lode")
+                                .font(.headline)
+                            Picker("Valore Lode", selection: $selectedValutaLode) {
+                                ForEach(valutaLodeOptions, id: \.self) { value in
+                                    Text("\(value, specifier: "%.1f")").tag(value)
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                        }
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(8)
+                        .shadow(radius: 2)
+                    }
+                    
+                    // Display the estimated average if available
+                    if let predictedAverage = predictedAverage {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("Nuova media: \(predictedAverage, specifier: "%.2f")")
+                                .font(.headline)
+                                .foregroundColor(.orange)
+                            
+                            // Inline message if the average was capped
+                            if showCappedMessage && predictedAverage == maxAverage {
+                                Text("La media prevista non può superare \(Int(maxAverage)). È stata impostata a \(Int(maxAverage)).")
+                                    .foregroundColor(.red)
+                                    .font(.subheadline)
+                            }
+                        }
+                        .padding(.top)
+                    }
+                    
+                    // Button to calculate the new average
+                    Button(action: {
+                        calculatePredictedAverage()
+                        isInputActive = false // Dismiss keyboard after calculation
+                    }) {
+                        Text("Calcola")
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .shadow(radius: 2)
+                    }
+                    .padding(.top)
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("Input non valido"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                    }
+                    
+                    Spacer()
                 }
                 .padding()
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(8)
-                .shadow(radius: 2)
-
-                // Display the estimated average if available
-                if let predictedAverage = predictedAverage {
-                    Text("Nuova media: \(predictedAverage, specifier: "%.2f")")
-                        .font(.headline)
-                        .foregroundColor(.orange)
-                        .padding(.top)
-                }
-
-                // Button to calculate the new average
-                Button(action: {
-                    calculatePredictedAverage()
-                    isInputActive = false // Dismiss keyboard after calculation
-                }) {
-                    Text("Calcola")
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .shadow(radius: 2)
-                }
-                .padding(.top)
-                .alert(isPresented: $showAlert) {
-                    Alert(title: Text("Input non valido"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                }
-
-                Spacer()
-            }
-            .padding()
-            .navigationTitle("Simulatore")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Chiudi") {
-                        presentationMode.wrappedValue.dismiss()
+                .navigationTitle("Simulatore")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Chiudi") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
                     }
                 }
             }
         }
     }
-
+    
     func calculatePredictedAverage() {
         let currentAvg = networkManager.media
         let currentCFU = networkManager.currentCfu
-
+        
         let selectedCFUDouble = Double(selectedCFU)
-
+        
+        // Reset capping message
+        showCappedMessage = false
+        
         // Validate inputs
         guard newVote >= 18 && newVote <= 30 else {
             alertMessage = "Il voto deve essere un intero tra 18 e 30."
             showAlert = true
             return
         }
-
+        
         guard cfuOptions.contains(selectedCFU) else {
             alertMessage = "CFU non valido. Seleziona un valore tra 3, 6, 9, 12, 15."
             showAlert = true
             return
         }
-
+        
         // Calculate the current weighted sum of votes
         let currentWeightedSum = currentAvg * currentCFU
-
+        
+        // Determine the vote value, considering Valuta Lode if enabled
+        var voteValue = Double(newVote)
+        if isValutaLode {
+            voteValue = selectedValutaLode
+        }
+        
         // Calculate the new total weighted sum
-        let newWeightedSum = currentWeightedSum + (Double(newVote) * selectedCFUDouble)
-
+        let newWeightedSum = currentWeightedSum + (voteValue * selectedCFUDouble)
+        
         // Calculate the new total CFU
         let totalCFUWithNew = currentCFU + selectedCFUDouble
-
+        
         // Calculate the new weighted average
-        let newAverage = newWeightedSum / totalCFUWithNew
-
+        var newAverage = newWeightedSum / totalCFUWithNew
+        
+        // Cap the new average at maxAverage
+        if newAverage > maxAverage {
+            newAverage = maxAverage
+            showCappedMessage = true // Show inline message to inform the user
+        }
+        
         // Update the predictedAverage variable
         predictedAverage = newAverage
     }
+}
+
+#Preview {
+    SimulationView()
 }
