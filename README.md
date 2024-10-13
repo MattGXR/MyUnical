@@ -40,36 +40,7 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 - **Data Synchronization**
   - Silent data fetching upon app launch to update cached data when internet connectivity is available.
 
-## Screenshots
-
-### Login View
-
-<img src="screenshots/login.PNG" alt="Login View"  height= "400" width="300"/>
-
-### Dashboard View
-
-<img src="screenshots/dashboard_Redacted.PNG" alt="Dashboard View" width="600"/>
-
-### Dashboard Offline View
-
-<img src="screenshots/dashboard_offline_Redacted.PNG" alt="Dashboard Offline View" width="600"/>
-
-### Simulator View
-
-<img src="screenshots/simulator.PNG" alt="Simulator View" width="600"/>
-
-### Libretto View
-
-<img src="screenshots/libretto.PNG" alt="Libretto View" width="600"/>
-
-### Settings View
-
-<img src="screenshots/settings_Redacted.PNG" alt="Settings View" width="600"/>
-
-### Settings Offline View
-
-<img src="screenshots/settings_offline_Redacted.png" alt="Settings Offline View" width="600"/>
-
+## ![Screenshots](https://postimg.cc/gallery/MTXLvPd)
 
 ## Requirements
 
