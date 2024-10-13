@@ -1,0 +1,118 @@
+{
+  "sourceLanguage" : "it",
+  "strings" : {
+    "" : {
+
+    },
+    "%@, %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "© 2024 Mattia Meligeni\nQuest'app non è stata commissionata né approvata dall'Università della Calabria." : {
+
+    },
+    "Account" : {
+
+    },
+    "Aggiorna dati" : {
+
+    },
+    "Al momento sei offline, vengono mostrati gli ultimi dati disponibili." : {
+
+    },
+    "Annulla" : {
+
+    },
+    "Calcola" : {
+
+    },
+    "Caricamento..." : {
+
+    },
+    "Cerca insegnamento..." : {
+
+    },
+    "CFU" : {
+
+    },
+    "CFU: %lld" : {
+
+    },
+    "Chiudi" : {
+
+    },
+    "Corso di Studi" : {
+
+    },
+    "Dashboard" : {
+
+    },
+    "Impossibile aggiornare i dati: non sei connesso a internet." : {
+
+    },
+    "Impostazioni" : {
+
+    },
+    "Input non valido" : {
+
+    },
+    "Key" : {
+      "extractionState" : "manual"
+    },
+    "Libretto" : {
+
+    },
+    "Login" : {
+
+    },
+    "Login fallito. Perfavore controlla i dati inseriti." : {
+
+    },
+    "Logout" : {
+
+    },
+    "MyUnical" : {
+
+    },
+    "Nuova media: %.2f" : {
+
+    },
+    "Offline" : {
+
+    },
+    "OK" : {
+
+    },
+    "Password" : {
+
+    },
+    "Simula nuovo voto" : {
+
+    },
+    "Simulatore" : {
+
+    },
+    "Ultimi voti" : {
+
+    },
+    "Username" : {
+
+    },
+    "Visualizza tutti i voti" : {
+
+    },
+    "Voto: %lld" : {
+
+    }
+  },
+  "version" : "1.0"
+}

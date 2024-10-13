@@ -8,6 +8,7 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var networkMonitor: NetworkMonitor // Add this if needed
     @State private var username = ""
     @State private var password = ""
     @State private var loginFailed = false
@@ -51,6 +52,7 @@ struct LoginView: View {
                     Text("Login fallito. Perfavore controlla i dati inseriti.")
                         .foregroundColor(.red)
                         .padding(.horizontal)
+                        .multilineTextAlignment(.center)
                 }
 
                 if isLoading {
@@ -78,9 +80,7 @@ struct LoginView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear {
-            checkLogin()
-        }
+        // Removed .onAppear { checkLogin() } as AppState handles login state
     }
 
     func login() {
@@ -110,34 +110,6 @@ struct LoginView: View {
         } else {
             isLoading = false
             loginFailed = true
-        }
-    }
-
-    func checkLogin() {
-        if let usernameData = KeychainHelper.shared.read(service: keychainService, account: "username"),
-           let passwordData = KeychainHelper.shared.read(service: keychainService, account: "password"),
-           let savedUsername = String(data: usernameData, encoding: .utf8),
-           let savedPassword = String(data: passwordData, encoding: .utf8),
-           !savedUsername.isEmpty,
-           !savedPassword.isEmpty {
-            self.username = savedUsername
-            self.password = savedPassword
-            isLoading = true
-            loginFailed = false
-            networkManager.authenticate(username: savedUsername, password: savedPassword) { success in
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    if success {
-                        self.appState.isLoggedIn = true
-                    } else {
-                        self.loginFailed = true
-                    }
-                }
-            }
-        } else {
-            // No valid credentials saved; do not attempt to login
-            self.username = ""
-            self.password = ""
         }
     }
 }
@@ -204,6 +176,10 @@ extension View {
     }
 }
 
-#Preview {
-    LoginView()
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoginView()
+            .environmentObject(AppState())
+            .environmentObject(NetworkMonitor.shared)
+    }
 }

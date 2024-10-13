@@ -5,18 +5,14 @@
 //  Created by Mattia Meligeni on 13/10/24.
 //
 
-// DashboardView.swift
-// MyUnical
-//
-// Created by Mattia Meligeni on 13/10/24.
-//
-
 import SwiftUI
 
 struct DashboardView: View {
+    @EnvironmentObject var networkMonitor: NetworkMonitor // Access NetworkMonitor
     @ObservedObject private var networkManager = NetworkManager.shared
     @Binding var selectedTab: Int
     @State private var showSimulation = false
+    @State private var showingOfflineAlert = false
 
     var body: some View {
         NavigationView {
@@ -28,14 +24,14 @@ struct DashboardView: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
-
+                    
                     // Cards with key information
                     HStack(spacing: 20) {
-                        DashboardCard(title: "Media Ponderata", value: String(format: "%.2f", networkManager.media), color: .blue)
+                        DashboardCard(title: "Media", value: String(format: "%.2f", networkManager.media), color: .blue)
                         DashboardCard(title: "CFU", value: "\(Int(networkManager.currentCfu))/\(networkManager.totalCfu)", color: .green)
                     }
                     .padding(.horizontal)
-
+                    
                     // Recent grades
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Ultimi voti")
@@ -44,8 +40,9 @@ struct DashboardView: View {
                         
                         ForEach(sortedVoti.prefix(3)) { voto in
                             GradeRow(voto: voto)
+                                .padding(.horizontal)
                         }
-
+                        
                         // Button to navigate to the "Libretto" tab
                         Button(action: {
                             selectedTab = 1 // Set the tab index to the "Libretto" tab
@@ -57,7 +54,7 @@ struct DashboardView: View {
                                 .padding(.top, 5)
                         }
                     }
-
+                    
                     // Simulation Button
                     Button(action: {
                         showSimulation = true
@@ -77,13 +74,27 @@ struct DashboardView: View {
                     .sheet(isPresented: $showSimulation) {
                         SimulationView()
                     }
-
+                    
                     Spacer()
                 }
             }
             .navigationTitle("Dashboard")
+            .alert(isPresented: $showingOfflineAlert) {
+                Alert(
+                    title: Text("Offline"),
+                    message: Text("Al momento sei offline, vengono mostrati gli ultimi dati disponibili."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            .onReceive(networkMonitor.$isConnected) { isConnected in
+                if !isConnected {
+                    showingOfflineAlert = true
+                }
+            }
         }
     }
+    
+    // Computed property for greeting
     var greeting: String {
         switch networkManager.sex {
         case "F":
@@ -94,23 +105,27 @@ struct DashboardView: View {
             return "Benvenuto/a"
         }
     }
+    
+    // Computed property for sorted grades
     var sortedVoti: [Voto] {
         networkManager.voti.sorted(by: { $0.date > $1.date })
     }
 }
 
-// Reusable information card for displaying main data
+// DashboardCard.swift
+
+import SwiftUI
+
 struct DashboardCard: View {
     let title: String
     let value: String
     let color: Color
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.white)
-
             Text(value)
                 .font(.largeTitle)
                 .bold()
@@ -119,10 +134,13 @@ struct DashboardCard: View {
         .frame(maxWidth: .infinity)
         .padding()
         .background(color)
-        .cornerRadius(12)
-        .shadow(radius: 5)
+        .cornerRadius(15)
     }
 }
+
+// GradeRow.swift
+
+import SwiftUI
 
 struct GradeRow: View {
     let voto: Voto
@@ -149,7 +167,14 @@ struct GradeRow: View {
             }
             Spacer()
         }
-        .padding(.horizontal)
         .padding(.vertical, 5)
+    }
+}
+
+struct DashboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        DashboardView(selectedTab: .constant(0))
+            .environmentObject(NetworkMonitor.shared)
+            .environmentObject(NetworkManager.shared)
     }
 }

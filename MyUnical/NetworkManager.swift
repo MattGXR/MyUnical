@@ -4,6 +4,7 @@
 // Created by Mattia Meligeni on 13/10/24.
 //
 
+
 import Foundation
 import Combine
 import SwiftUI
@@ -69,6 +70,9 @@ class NetworkManager: ObservableObject {
                     self.fetchMedia(username: username, password: password)
                     self.fetchProve(username: username, password: password)
                     completion(true)
+                    
+                    // Save authenticated user data to cache
+                    self.saveUserData()
                 } else {
                     completion(false)
                 }
@@ -110,6 +114,7 @@ class NetworkManager: ObservableObject {
                 }
             }, receiveValue: { [weak self] mediaValue in
                 self?.media = mediaValue
+                self?.saveUserData() // Update cache with new media
             })
         
         // Store the cancellable
@@ -168,6 +173,7 @@ class NetworkManager: ObservableObject {
             }, receiveValue: { [weak self] prove, righe in
                 guard let self = self else { return }
                 self.processGrades(prove: prove, righe: righe)
+                self.saveUserData() // Update cache with new grades
             })
         
         // Store the cancellable
@@ -198,7 +204,7 @@ class NetworkManager: ObservableObject {
             }
         }
         self.currentCfu = totalCfu
-        self.voti = votiArray
+        self.voti = votiArray.sorted(by: { $0.date > $1.date })
     }
     
     /// Clears all stored data and cancels any ongoing subscriptions.
@@ -212,5 +218,49 @@ class NetworkManager: ObservableObject {
         // Cancel any ongoing subscriptions
         self.cancellables.forEach { $0.cancel() }
         self.cancellables.removeAll()
+        
+        // Remove cached data
+        DataPersistence.shared.save([Voto](), to: "voti.json")
+        DataPersistence.shared.save("", to: "userData.json")
     }
+    
+    /// Saves the current user data to local storage.
+    private func saveUserData() {
+        let userData = UserData(
+            userName: self.userName,
+            sex: self.sex,
+            cdsDes: self.cdsDes,
+            matId: self.matId,
+            totalCfu: self.totalCfu,
+            media: self.media,
+            currentCfu: self.currentCfu,
+            voti: self.voti
+        )
+        DataPersistence.shared.save(userData, to: "userData.json")
+    }
+    
+    /// Loads user data from local storage.
+    func loadCachedData() {
+        if let cachedUserData = DataPersistence.shared.load("userData.json", as: UserData.self) {
+            self.userName = cachedUserData.userName
+            self.sex = cachedUserData.sex
+            self.cdsDes = cachedUserData.cdsDes
+            self.matId = cachedUserData.matId
+            self.totalCfu = cachedUserData.totalCfu
+            self.media = cachedUserData.media
+            self.currentCfu = cachedUserData.currentCfu
+            self.voti = cachedUserData.voti.sorted(by: { $0.date > $1.date })
+        }
+    }
+}
+
+struct UserData: Codable {
+    let userName: String
+    let sex: String
+    let cdsDes: String
+    let matId: Int
+    let totalCfu: Int
+    let media: Double
+    let currentCfu: Double
+    let voti: [Voto]
 }

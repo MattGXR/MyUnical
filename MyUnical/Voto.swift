@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Voto: Identifiable {
+struct Voto: Codable, Identifiable {
     let id = UUID()
     let insegnamento: String
     let voto: Int

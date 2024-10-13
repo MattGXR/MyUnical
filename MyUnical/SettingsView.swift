@@ -9,10 +9,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var networkMonitor: NetworkMonitor // Ensure NetworkMonitor is available
     @ObservedObject private var networkManager = NetworkManager.shared
     @State private var username: String = ""
     @State private var password: String = ""
     private let keychainService = "it.mattiameligeni.MyUnical"
+    @State private var showingOfflineAlert = false
 
     var body: some View {
         NavigationView {
@@ -55,9 +57,16 @@ struct SettingsView: View {
                     .padding()
             }
             .navigationBarTitle("Impostazioni")
-            .onAppear {
-                loadCredentials()
+            .alert(isPresented: $showingOfflineAlert) {
+                Alert(
+                    title: Text("Offline"),
+                    message: Text("Impossibile aggiornare i dati: non sei connesso a internet."),
+                    dismissButton: .default(Text("OK"))
+                )
             }
+        }
+        .onAppear {
+            loadCredentials()
         }
     }
 
@@ -86,15 +95,29 @@ struct SettingsView: View {
     }
 
     private func refreshData() {
-        if let usernameData = KeychainHelper.shared.read(service: keychainService, account: "username"),
-           let passwordData = KeychainHelper.shared.read(service: keychainService, account: "password"),
-           let username = String(data: usernameData, encoding: .utf8),
-           let password = String(data: passwordData, encoding: .utf8) {
-            networkManager.authenticate(username: username, password: password) { success in
-                if !success {
-                    // Handle authentication failure if needed
+        if networkMonitor.isConnected {
+            if let usernameData = KeychainHelper.shared.read(service: keychainService, account: "username"),
+               let passwordData = KeychainHelper.shared.read(service: keychainService, account: "password"),
+               let username = String(data: usernameData, encoding: .utf8),
+               let password = String(data: passwordData, encoding: .utf8) {
+                networkManager.authenticate(username: username, password: password) { success in
+                    if success {
+                        print("Data refreshed successfully.")
+                    } else {
+                        print("Failed to refresh data.")
+                    }
                 }
             }
+        } else {
+            showingOfflineAlert = true
         }
+    }
+}
+
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView()
+            .environmentObject(AppState())
+            .environmentObject(NetworkMonitor.shared)
     }
 }
