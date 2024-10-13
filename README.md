@@ -40,7 +40,9 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 - **Data Synchronization**
   - Silent data fetching upon app launch to update cached data when internet connectivity is available.
 
-## ![Screenshots](https://postimg.cc/gallery/MTXLvPd)
+## Screenshots
+
+[Link to the pictures](https://postimg.cc/gallery/MTXLvPd)
 
 ## Requirements
 
