@@ -13,7 +13,7 @@ struct MyUnicalTabView: View {
     @ObservedObject private var networkManager = NetworkManager.shared
     @State private var selectedTab: Int = 0
     private let keychainService = "it.mattiameligeni.MyUnical"
-
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             DashboardView(selectedTab: $selectedTab)
@@ -28,7 +28,11 @@ struct MyUnicalTabView: View {
                     Text("Libretto")
                 }
                 .tag(1)
-            // Other tabs...
+            TaxView()
+                .tabItem {
+                    Image(systemName: "dollarsign.circle.fill")
+                    Text("Tasse")
+                }
             SettingsView()
                 .tabItem {
                     Image(systemName: "gear")

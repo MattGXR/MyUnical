@@ -15,13 +15,13 @@ struct LoginView: View {
     @State private var isLoading = false
     @StateObject private var networkManager = NetworkManager.shared
     private let keychainService = "it.mattiameligeni.MyUnical"
-
+    
     var body: some View {
         ZStack {
             // Background using system background color
             Color(UIColor.systemBackground)
                 .ignoresSafeArea()
-
+            
             VStack(spacing: 20) {
                 // App logo or name
                 Text("MyUnical")
@@ -29,9 +29,9 @@ struct LoginView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                     .padding(.top, 50)
-
+                
                 Spacer()
-
+                
                 // Username field
                 CustomTextField(
                     placeholder: Text("Username").foregroundColor(.gray),
@@ -39,7 +39,7 @@ struct LoginView: View {
                     imageName: "person"
                 )
                 .padding(.horizontal)
-
+                
                 // Password field
                 CustomSecureField(
                     placeholder: Text("Password").foregroundColor(.gray),
@@ -47,19 +47,19 @@ struct LoginView: View {
                     imageName: "lock"
                 )
                 .padding(.horizontal)
-
+                
                 if loginFailed {
                     Text("Login fallito. Perfavore controlla i dati inseriti.")
                         .foregroundColor(.red)
                         .padding(.horizontal)
                         .multilineTextAlignment(.center)
                 }
-
+                
                 if isLoading {
                     ProgressView("Caricamento...")
                         .padding()
                 }
-
+                
                 // Login button
                 Button(action: {
                     login()
@@ -75,28 +75,28 @@ struct LoginView: View {
                 }
                 .padding(.top, 20)
                 .disabled(isLoading)
-
+                
                 Spacer()
             }
         }
         .navigationBarHidden(true)
         // Removed .onAppear { checkLogin() } as AppState handles login state
     }
-
+    
     func login() {
         guard !username.isEmpty, !password.isEmpty else {
             loginFailed = true
             return
         }
-
+        
         isLoading = true
         loginFailed = false
-
+        
         if let usernameData = username.data(using: .utf8),
            let passwordData = password.data(using: .utf8) {
             KeychainHelper.shared.save(usernameData, service: keychainService, account: "username")
             KeychainHelper.shared.save(passwordData, service: keychainService, account: "password")
-
+            
             networkManager.authenticate(username: username, password: password) { success in
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -119,7 +119,7 @@ struct CustomTextField: View {
     var placeholder: Text
     @Binding var text: String
     var imageName: String
-
+    
     var body: some View {
         HStack {
             Image(systemName: imageName)
@@ -143,7 +143,7 @@ struct CustomSecureField: View {
     var placeholder: Text
     @Binding var text: String
     var imageName: String
-
+    
     var body: some View {
         HStack {
             Image(systemName: imageName)

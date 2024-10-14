@@ -69,6 +69,9 @@
     "Chiudi" : {
 
     },
+    "Codice Avviso: %@" : {
+
+    },
     "Connessione Assente" : {
 
     },
@@ -81,13 +84,31 @@
     "Data Inizio Appello" : {
 
     },
+    "Data Pagamento: %@" : {
+
+    },
+    "Descrizione: %@" : {
+
+    },
     "Dettagli Appello" : {
 
     },
     "È necessaria una connessione internet per prenotare un appello" : {
 
     },
+    "Emissione: %@" : {
+
+    },
+    "Fatture" : {
+
+    },
     "Fine Iscrizione" : {
+
+    },
+    "Importo dovuto: €%.2f" : {
+
+    },
+    "Importo: €%.2f" : {
 
     },
     "Impossibile aggiornare i dati: non sei connesso a internet." : {
@@ -139,7 +160,13 @@
     "Nessun appello disponibile." : {
 
     },
+    "Nessun pagamento disponibile." : {
+
+    },
     "Note" : {
+
+    },
+    "Numero Fattura: %@" : {
 
     },
     "Numero Iscritti" : {
@@ -154,6 +181,9 @@
     "OK" : {
 
     },
+    "Pagato: %@" : {
+
+    },
     "Password" : {
 
     },
@@ -163,6 +193,9 @@
     "Presidente" : {
 
     },
+    "Scadenza: %@" : {
+
+    },
     "Seleziona Valore Lode" : {
 
     },
@@ -170,6 +203,12 @@
 
     },
     "Simulatore" : {
+
+    },
+    "Situazione pagamenti" : {
+
+    },
+    "Tasse" : {
 
     },
     "Ultimi voti" : {

@@ -8,7 +8,7 @@
 import Foundation
 
 struct Insegnamento: Codable, Identifiable {
-    let id = UUID()         // Using adDefAppId as a unique identifier
-    let adDes: String     // Description of the insegnamento
-    let adDefAppId: Int   // Unique identifier for the insegnamento
+    let id = UUID()
+    let adDes: String
+    let adDefAppId: Int   
 }

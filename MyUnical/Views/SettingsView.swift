@@ -12,27 +12,16 @@ struct SettingsView: View {
     @EnvironmentObject var networkMonitor: NetworkMonitor // Ensure NetworkMonitor is available
     @ObservedObject private var networkManager = NetworkManager.shared
     @State private var username: String = ""
-    @State private var password: String = ""
     private let keychainService = "it.mattiameligeni.MyUnical"
     @State private var showingOfflineAlert = false
-
+    
     var body: some View {
         NavigationView {
             VStack {
                 Form {
                     Section(header: Text("Account")) {
                         TextField("Username", text: $username)
-                            .onChange(of: username) { oldValue, newValue in
-                                if let data = newValue.data(using: .utf8) {
-                                    KeychainHelper.shared.save(data, service: keychainService, account: "username")
-                                }
-                            }
-                        SecureField("Password", text: $password)
-                            .onChange(of: password) { oldValue, newValue in
-                                if let data = newValue.data(using: .utf8) {
-                                    KeychainHelper.shared.save(data, service: keychainService, account: "password")
-                                }
-                            }
+                            .disabled(true)
                         Button(action: {
                             logout()
                         }) {
@@ -69,31 +58,27 @@ struct SettingsView: View {
             loadCredentials()
         }
     }
-
+    
     private func loadCredentials() {
         if let usernameData = KeychainHelper.shared.read(service: keychainService, account: "username"),
-           let passwordData = KeychainHelper.shared.read(service: keychainService, account: "password"),
-           let username = String(data: usernameData, encoding: .utf8),
-           let password = String(data: passwordData, encoding: .utf8) {
+           let username = String(data: usernameData, encoding: .utf8){
             self.username = username
-            self.password = password
         }
     }
-
+    
     private func logout() {
         // Delete credentials from Keychain
         KeychainHelper.shared.delete(service: keychainService, account: "username")
         KeychainHelper.shared.delete(service: keychainService, account: "password")
         username = ""
-        password = ""
-
+        
         // Clear data in NetworkManager
         networkManager.clearData()
-
+        
         // Update app state to show login screen
         appState.isLoggedIn = false
     }
-
+    
     private func refreshData() {
         if networkMonitor.isConnected {
             if let usernameData = KeychainHelper.shared.read(service: keychainService, account: "username"),

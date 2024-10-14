@@ -16,6 +16,7 @@ class NetworkManager: ObservableObject {
     @Published var cdsDes: String = ""
     @Published var cdsId: Int = 0
     @Published var matId: Int = 0
+    @Published var stuId: Int = 0
     @Published var totalCfu: Int = 0
     @Published var media: Double = 0.0
     @Published var baseL: Double = 0.0
@@ -26,6 +27,10 @@ class NetworkManager: ObservableObject {
     @Published var insegnamenti: [Insegnamento] = []
     @Published var appelli: [Appello] = []
     @Published var isFetching: Bool = false
+    @Published var semaforo: Semaforo?
+    @Published var fatture: [Fattura] = []
+    @Published var persId: Int = 0
+    @Published var aaId: Int = 0
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -65,17 +70,22 @@ class NetworkManager: ObservableObject {
             }, receiveValue: { [weak self] response in
                 guard let self = self else { return }
                 self.userName = response.user.firstName
+                self.persId = response.user.persId
                 self.sex = response.user.sex
                 if let firstTratto = response.user.trattiCarriera.first {
                     self.cdsDes = firstTratto.cdsDes
                     self.cdsId = firstTratto.cdsId
                     self.matId = firstTratto.matId
+                    self.aaId = firstTratto.dettaglioTratto.aaIscrId
+                    self.stuId = firstTratto.stuId
                     let durataAnni = firstTratto.dettaglioTratto.durataAnni
                     self.totalCfu = durataAnni == 2 ? 60 : 180
                     // Fetch media and grades after authentication
                     self.fetchMedia(username: username, password: password)
                     self.fetchProve(username: username, password: password)
                     self.fetchInsegnamenti(username: username, password: password)
+                    self.fetchSemaforo(username: username, password: password)
+                    self.fetchFatture(username: username, password: password)
                     completion(true)
                     
                     // Save authenticated user data to cache
@@ -88,137 +98,137 @@ class NetworkManager: ObservableObject {
     }
     
     func fetchInsegnamenti(username: String, password: String) {
-            // Ensure matId is valid
-            guard matId != 0 else { return }
-            
-            // Prepare the Base64 encoded credentials
-            let base64LoginString = "\(username):\(password)"
-                .data(using: .utf8)?
-                .base64EncodedString() ?? ""
-            
-            // Construct the URL string
-            let urlString = "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli"
-            
-            // Validate the URL
-            guard let url = URL(string: urlString) else { return }
-            
-            // Create the URLRequest and set the Authorization header
-            var request = URLRequest(url: url)
-            request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-            
-            // Create the data task publisher
-            let cancellable = URLSession.shared.dataTaskPublisher(for: request)
-                // Ensure the response is valid
-                .tryMap { result -> Data in
-                    guard let httpResponse = result.response as? HTTPURLResponse,
-                          (200...299).contains(httpResponse.statusCode) else {
-                        throw URLError(.badServerResponse)
-                    }
-                    return result.data
+        // Ensure matId is valid
+        guard matId != 0 else { return }
+        
+        // Prepare the Base64 encoded credentials
+        let base64LoginString = "\(username):\(password)"
+            .data(using: .utf8)?
+            .base64EncodedString() ?? ""
+        
+        // Construct the URL string
+        let urlString = "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli"
+        
+        // Validate the URL
+        guard let url = URL(string: urlString) else { return }
+        
+        // Create the URLRequest and set the Authorization header
+        var request = URLRequest(url: url)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
+        // Create the data task publisher
+        let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+        // Ensure the response is valid
+            .tryMap { result -> Data in
+                guard let httpResponse = result.response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw URLError(.badServerResponse)
                 }
-                // Decode the JSON into an array of Insegnamento
-                .decode(type: [Insegnamento].self, decoder: JSONDecoder())
-                // Switch to the main thread for UI updates
-                .receive(on: DispatchQueue.main)
-                // Handle the received values
-                .sink(receiveCompletion: { completionResult in
-                    switch completionResult {
-                    case .finished:
-                        // Successfully finished, no action needed
-                        break
-                    case .failure(let error):
-                        // Handle the error appropriately
-                        print("Error fetching insegnamenti: \(error)")
-                    }
-                }, receiveValue: { [weak self] insegnamenti in
-                    guard let self = self else { return }
-                    
-                    self.insegnamenti = insegnamenti
-                })
-            
-            // Store the cancellable to manage the subscription lifecycle
-            cancellable.store(in: &self.cancellables)
-        }
+                return result.data
+            }
+        // Decode the JSON into an array of Insegnamento
+            .decode(type: [Insegnamento].self, decoder: JSONDecoder())
+        // Switch to the main thread for UI updates
+            .receive(on: DispatchQueue.main)
+        // Handle the received values
+            .sink(receiveCompletion: { completionResult in
+                switch completionResult {
+                case .finished:
+                    // Successfully finished, no action needed
+                    break
+                case .failure(let error):
+                    // Handle the error appropriately
+                    print("Error fetching insegnamenti: \(error)")
+                }
+            }, receiveValue: { [weak self] insegnamenti in
+                guard let self = self else { return }
+                
+                self.insegnamenti = insegnamenti
+            })
+        
+        // Store the cancellable to manage the subscription lifecycle
+        cancellable.store(in: &self.cancellables)
+    }
     
     func fetchAppelli(adId: Int) {
-            // Ensure matId is valid
-            guard matId != 0 else {
-                print("NetworkManager: Invalid matId: \(matId)")
-                DispatchQueue.main.async {
-                    self.appelli = []
-                    self.isFetching = false
-                }
-                return
+        // Ensure matId is valid
+        guard matId != 0 else {
+            print("NetworkManager: Invalid matId: \(matId)")
+            DispatchQueue.main.async {
+                self.appelli = []
+                self.isFetching = false
             }
-            
-            isFetching = true
-            
-            // Retrieve credentials from Keychain
-            let username = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "username")
-            let password = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "password")
-            let credentials = "\(username):\(password)"
-            
-            // Encode credentials in Base64
-            guard let credentialData = credentials.data(using: .utf8) else {
-                print("NetworkManager: Error encoding credentials")
-                DispatchQueue.main.async {
-                    self.appelli = []
-                    self.isFetching = false
-                }
-                return
-            }
-            let base64LoginString = credentialData.base64EncodedString()
-            
-            // Construct URL with query parameters using URLComponents
-            var components = URLComponents(string: "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli/\(cdsId)/\(adId)/")
-            components?.queryItems = [
-                URLQueryItem(name: "q", value: "APPELLI_PRENOTABILI_E_FUTuri"),
-                URLQueryItem(name: "start", value: "0"),
-                URLQueryItem(name: "limit", value: "50"),
-                URLQueryItem(name: "order", value: "+dataInizio")
-            ]
-            
-            // Validate the URL
-            guard let url = components?.url else {
-                print("NetworkManager: Invalid URL with components: \(components?.description ?? "nil")")
-                DispatchQueue.main.async {
-                    self.appelli = []
-                    self.isFetching = false
-                }
-                return
-            }
-            
-            // Create URLRequest and set Authorization header
-            var request = URLRequest(url: url)
-            request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-            request.httpMethod = "GET"
-            
-            // Perform the network request using Combine
-            URLSession.shared.dataTaskPublisher(for: request)
-                // Validate response status code
-                .tryMap { result -> Data in
-                    guard let httpResponse = result.response as? HTTPURLResponse else {
-                        throw URLError(.badServerResponse)
-                    }
-                    guard (200...299).contains(httpResponse.statusCode) else {
-                        throw URLError(.badServerResponse)
-                    }
-                    return result.data
-                }
-                // Decode JSON response into [Appello]
-                .decode(type: [Appello].self, decoder: JSONDecoder())
-                // Handle errors by replacing with an empty array
-                .replaceError(with: [])
-                // Ensure updates happen on the main thread
-                .receive(on: DispatchQueue.main)
-                // Assign the fetched data to @Published property
-                .sink { [weak self] receivedAppelli in
-                    guard let self = self else { return }
-                    self.appelli = receivedAppelli
-                    self.isFetching = false
-                }
-                .store(in: &cancellables)
+            return
         }
+        
+        isFetching = true
+        
+        // Retrieve credentials from Keychain
+        let username = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "username")
+        let password = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "password")
+        let credentials = "\(String(describing: username)):\(String(describing: password))"
+        
+        // Encode credentials in Base64
+        guard let credentialData = credentials.data(using: .utf8) else {
+            print("NetworkManager: Error encoding credentials")
+            DispatchQueue.main.async {
+                self.appelli = []
+                self.isFetching = false
+            }
+            return
+        }
+        let base64LoginString = credentialData.base64EncodedString()
+        
+        // Construct URL with query parameters using URLComponents
+        var components = URLComponents(string: "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli/\(cdsId)/\(adId)/")
+        components?.queryItems = [
+            URLQueryItem(name: "q", value: "APPELLI_PRENOTABILI_E_FUTuri"),
+            URLQueryItem(name: "start", value: "0"),
+            URLQueryItem(name: "limit", value: "50"),
+            URLQueryItem(name: "order", value: "+dataInizio")
+        ]
+        
+        // Validate the URL
+        guard let url = components?.url else {
+            print("NetworkManager: Invalid URL with components: \(components?.description ?? "nil")")
+            DispatchQueue.main.async {
+                self.appelli = []
+                self.isFetching = false
+            }
+            return
+        }
+        
+        // Create URLRequest and set Authorization header
+        var request = URLRequest(url: url)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        
+        // Perform the network request using Combine
+        URLSession.shared.dataTaskPublisher(for: request)
+        // Validate response status code
+            .tryMap { result -> Data in
+                guard let httpResponse = result.response as? HTTPURLResponse else {
+                    throw URLError(.badServerResponse)
+                }
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+        // Decode JSON response into [Appello]
+            .decode(type: [Appello].self, decoder: JSONDecoder())
+        // Handle errors by replacing with an empty array
+            .replaceError(with: [])
+        // Ensure updates happen on the main thread
+            .receive(on: DispatchQueue.main)
+        // Assign the fetched data to @Published property
+            .sink { [weak self] receivedAppelli in
+                guard let self = self else { return }
+                self.appelli = receivedAppelli
+                self.isFetching = false
+            }
+            .store(in: &cancellables)
+    }
     
     /// Fetches the student's average grade (media).
     /// - Parameters:
@@ -245,7 +255,7 @@ class NetworkManager: ObservableObject {
         
         // Create the data task publisher
         let cancellable = URLSession.shared.dataTaskPublisher(for: request)
-            // Ensure the response is valid
+        // Ensure the response is valid
             .tryMap { result -> Data in
                 guard let httpResponse = result.response as? HTTPURLResponse,
                       (200...299).contains(httpResponse.statusCode) else {
@@ -253,11 +263,11 @@ class NetworkManager: ObservableObject {
                 }
                 return result.data
             }
-            // Decode the JSON into an array of MediaElemento
+        // Decode the JSON into an array of MediaElemento
             .decode(type: [MediaElemento].self, decoder: JSONDecoder())
-            // Switch to the main thread for UI updates
+        // Switch to the main thread for UI updates
             .receive(on: DispatchQueue.main)
-            // Handle the received values
+        // Handle the received values
             .sink(receiveCompletion: { completionResult in
                 switch completionResult {
                 case .finished:
@@ -347,6 +357,123 @@ class NetworkManager: ObservableObject {
         cancellable.store(in: &self.cancellables)
     }
     
+    func fetchSemaforo(username: String, password: String) {
+        // Ensure matId is valid
+        guard matId != 0 else {
+            print("Invalid matId")
+            return
+        }
+        
+        // Prepare the Base64 encoded credentials
+        let credentials = "\(username):\(password)"
+        guard let credentialData = credentials.data(using: .utf8) else {
+            print("Failed to encode credentials")
+            return
+        }
+        let base64LoginString = credentialData.base64EncodedString()
+        
+        // Construct the URL string
+        let urlString = "https://unical.esse3.cineca.it/e3rest/api/tasse-service-v1/semaforo/\(stuId)"
+        
+        // Validate the URL
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        // Create the URLRequest and set the Authorization header
+        var request = URLRequest(url: url)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
+        // Create the data task publisher
+        URLSession.shared.dataTaskPublisher(for: request)
+        // Ensure the response is valid
+            .tryMap { result -> Data in
+                guard let httpResponse = result.response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+        // Decode the JSON into a Semaforo object
+            .decode(type: Semaforo.self, decoder: JSONDecoder())
+        // Switch to the main thread for UI updates
+            .receive(on: DispatchQueue.main)
+        // Handle the received values
+            .sink(receiveCompletion: { [weak self] completionResult in
+                switch completionResult {
+                case .finished:
+                    // Successfully finished, no action needed
+                    break
+                case .failure(let error):
+                    // Handle the error appropriately
+                    print("Error fetching Semaforo: \(error)")
+                    // Optionally, update UI or notify the user
+                    // self?.semaforo = nil
+                }
+            }, receiveValue: { [weak self] semaforo in
+                guard let self = self else { return }
+                
+                self.semaforo = semaforo
+                // Optionally, update the UI or perform other actions with the data
+            })
+        // Store the cancellable to manage the subscription lifecycle
+            .store(in: &self.cancellables)
+    }
+    
+    func fetchFatture(username: String, password: String) {
+        // Ensure matId is valid
+        guard matId != 0 else { return }
+        
+        // Prepare the Base64 encoded credentials
+        let base64LoginString = "\(username):\(password)"
+            .data(using: .utf8)?
+            .base64EncodedString() ?? ""
+        
+        // Construct the URL string
+        let urlString = "https://unical.esse3.cineca.it/e3rest/api/tasse-service-v1/lista-fatture/?persId=\(persId)&aaId=\(aaId)"
+        
+        // Validate the URL
+        guard let url = URL(string: urlString) else { return }
+        
+        // Create the URLRequest and set the Authorization header
+        var request = URLRequest(url: url)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
+        // Create the data task publisher
+        let cancellable = URLSession.shared.dataTaskPublisher(for: request)
+        // Ensure the response is valid
+            .tryMap { result -> Data in
+                guard let httpResponse = result.response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+        // Decode the JSON into an array of Fattura
+            .decode(type: [Fattura].self, decoder: JSONDecoder())
+        // Switch to the main thread for UI updates
+            .receive(on: DispatchQueue.main)
+        // Handle the received values
+            .sink(receiveCompletion: { completionResult in
+                switch completionResult {
+                case .finished:
+                    // Successfully finished, no action needed
+                    break
+                case .failure(let error):
+                    // Handle the error appropriately
+                    print("Error fetching fatture: \(error)")
+                }
+            }, receiveValue: { [weak self] fatture in
+                guard let self = self else { return }
+                
+                self.fatture = fatture
+            })
+        
+        // Store the cancellable to manage the subscription lifecycle
+        cancellable.store(in: &self.cancellables)
+    }
+    
     /// Processes the fetched grades and updates the published properties.
     /// - Parameters:
     ///   - prove: Array of `Prova` objects representing exam attempts.
@@ -379,6 +506,9 @@ class NetworkManager: ObservableObject {
         self.cdsDes = ""
         self.cdsId = 0
         self.matId = 0
+        self.stuId = 0
+        self.persId = 0
+        self.aaId = 0
         self.totalCfu = 0
         self.media = 0.0
         self.baseL = 0.0
@@ -401,6 +531,9 @@ class NetworkManager: ObservableObject {
             cdsDes: self.cdsDes,
             cdsId : self.cdsId,
             matId: self.matId,
+            persId: self.persId,
+            aaId: self.aaId,
+            stuId : self.stuId,
             totalCfu: self.totalCfu,
             media: self.media,
             baseL: self.baseL,
@@ -418,6 +551,9 @@ class NetworkManager: ObservableObject {
             self.cdsDes = cachedUserData.cdsDes
             self.cdsId = cachedUserData.cdsId
             self.matId = cachedUserData.matId
+            self.persId = cachedUserData.persId
+            self.aaId = cachedUserData.aaId
+            self.stuId = cachedUserData.stuId
             self.totalCfu = cachedUserData.totalCfu
             self.media = cachedUserData.media
             self.baseL = cachedUserData.baseL
@@ -433,6 +569,9 @@ struct UserData: Codable {
     let cdsDes: String
     let cdsId: Int
     let matId: Int
+    let persId: Int
+    let aaId: Int
+    let stuId: Int
     let totalCfu: Int
     let media: Double
     let baseL: Double

@@ -13,7 +13,7 @@ struct DashboardView: View {
     @Binding var selectedTab: Int
     @State private var showSimulation = false
     @State private var showingOfflineAlert = false
-
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -126,7 +126,7 @@ struct DashboardCard: View {
     let title: String
     let value: String
     let color: Color
-
+    
     var body: some View {
         VStack {
             Text(title)
@@ -150,7 +150,7 @@ import SwiftUI
 
 struct GradeRow: View {
     let voto: Voto
-
+    
     var body: some View {
         HStack {
             // Voto Badge
@@ -162,7 +162,7 @@ struct GradeRow: View {
                     .font(.headline)
                     .foregroundColor(.white)
             }
-
+            
             VStack(alignment: .leading) {
                 Text(voto.insegnamento)
                     .font(.subheadline)

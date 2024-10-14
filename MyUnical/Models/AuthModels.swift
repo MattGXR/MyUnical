@@ -15,15 +15,19 @@ struct User: Codable {
     let trattiCarriera: [TrattoCarriera]
     let firstName: String
     let sex: String
+    let persId: Int
 }
 
 struct TrattoCarriera: Codable {
     let cdsDes: String
     let cdsId: Int
     let matId: Int
+    
+    let stuId: Int
     let dettaglioTratto: DettaglioTratto
 }
 
 struct DettaglioTratto: Codable {
     let durataAnni: Int
+    let aaIscrId: Int
 }
