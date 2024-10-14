@@ -32,6 +32,12 @@ struct DashboardView: View {
                     }
                     .padding(.horizontal)
                     
+                    HStack(spacing: 20) {
+                        DashboardCard(title: "Base Laurea", value: String(format: "%.2f", networkManager.baseL), color: .purple)
+                        DashboardCard(title: "CFU Rimanenti", value: "\(Int(Double(networkManager.totalCfu)-networkManager.currentCfu))", color: .red)
+                    }
+                    .padding(.horizontal)
+                    
                     // Recent grades
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Ultimi voti")

@@ -19,6 +19,7 @@ struct User: Codable {
 
 struct TrattoCarriera: Codable {
     let cdsDes: String
+    let cdsId: Int
     let matId: Int
     let dettaglioTratto: DettaglioTratto
 }

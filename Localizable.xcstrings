@@ -35,6 +35,12 @@
     "Annulla" : {
 
     },
+    "Appelli disponibili per: %@" : {
+
+    },
+    "Avviso" : {
+
+    },
     "Calcola" : {
 
     },
@@ -53,10 +59,25 @@
     "Chiudi" : {
 
     },
+    "Connessione Assente" : {
+
+    },
     "Corso di Studi" : {
 
     },
     "Dashboard" : {
+
+    },
+    "Data Inizio Appello: %@" : {
+
+    },
+    "Dettagli Appello" : {
+
+    },
+    "È necessaria una connessione internet per prenotare un appello" : {
+
+    },
+    "Fine Iscrizione: %@" : {
 
     },
     "Impossibile aggiornare i dati: non sei connesso a internet." : {
@@ -65,7 +86,13 @@
     "Impostazioni" : {
 
     },
+    "Inizio Iscrizione: %@" : {
+
+    },
     "Input non valido" : {
+
+    },
+    "Iscriviti" : {
 
     },
     "Key" : {
@@ -96,6 +123,18 @@
     "MyUnical" : {
 
     },
+    "Nessun appello disponibile" : {
+
+    },
+    "Nessun appello disponibile." : {
+
+    },
+    "Note: %@" : {
+
+    },
+    "Numero Iscritti: %lld" : {
+
+    },
     "Nuova media: %.2f" : {
 
     },
@@ -107,6 +146,19 @@
     },
     "Password" : {
 
+    },
+    "Prenota Appelli" : {
+
+    },
+    "Presidente: %@ %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Presidente: %1$@ %2$@"
+          }
+        }
+      }
     },
     "Seleziona Valore Lode" : {
 

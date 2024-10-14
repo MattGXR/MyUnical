@@ -20,13 +20,13 @@ struct SimulationView: View {
     
     // New State Variables for Valuta Lode
     @State private var isValutaLode: Bool = false
-    @State private var selectedValutaLode: Double = 33.0 // Default value
+    @State private var selectedValutaLode: Double = 33 // Default value
     
     // Allowed CFU values
     let cfuOptions = [3, 6, 9, 12, 15]
     
     // Valuta Lode options
-    let valutaLodeOptions: [Double] = [33.0, 30.5]
+    let valutaLodeOptions: [Double] = [33, 31]
     
     // Maximum allowed average
     let maxAverage: Double = 30.0
