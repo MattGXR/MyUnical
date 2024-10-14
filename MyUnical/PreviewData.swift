@@ -25,7 +25,7 @@ struct PreviewData {
             dataInizioIscr: "2024-11-05",
             dataFineIscr: "2024-11-20",
             dataInizioApp: "2024-12-05",
-            desApp: "Appello Matematica 2",
+            desApp: "Appello Fisica 2",
             note: nil,
             numIscritti: 30,
             presidenteNome: "Luigi",

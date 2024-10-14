@@ -7,6 +7,16 @@
     "%.1f" : {
 
     },
+    "%@ %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%@, %@" : {
       "localizations" : {
         "it" : {
@@ -68,7 +78,7 @@
     "Dashboard" : {
 
     },
-    "Data Inizio Appello: %@" : {
+    "Data Inizio Appello" : {
 
     },
     "Dettagli Appello" : {
@@ -77,7 +87,7 @@
     "È necessaria una connessione internet per prenotare un appello" : {
 
     },
-    "Fine Iscrizione: %@" : {
+    "Fine Iscrizione" : {
 
     },
     "Impossibile aggiornare i dati: non sei connesso a internet." : {
@@ -86,7 +96,7 @@
     "Impostazioni" : {
 
     },
-    "Inizio Iscrizione: %@" : {
+    "Inizio Iscrizione" : {
 
     },
     "Input non valido" : {
@@ -129,10 +139,10 @@
     "Nessun appello disponibile." : {
 
     },
-    "Note: %@" : {
+    "Note" : {
 
     },
-    "Numero Iscritti: %lld" : {
+    "Numero Iscritti" : {
 
     },
     "Nuova media: %.2f" : {
@@ -150,15 +160,8 @@
     "Prenota Appelli" : {
 
     },
-    "Presidente: %@ %@" : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Presidente: %1$@ %2$@"
-          }
-        }
-      }
+    "Presidente" : {
+
     },
     "Seleziona Valore Lode" : {
 
