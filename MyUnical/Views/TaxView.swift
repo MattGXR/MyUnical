@@ -14,6 +14,8 @@ struct TaxView: View {
     // State variables to handle sheet presentation
     @State private var isShowingIstruzioni = false
     @State private var selectedCodiceAvviso: String = ""
+    @State private var selectedPrice: Double = 0
+    @State private var selectedFattura: Fattura? = nil
     
     var body: some View {
         NavigationView {
@@ -55,11 +57,11 @@ struct TaxView: View {
                                     
                                     Text("Pagato: \(fattura.pagato ? "Sì" : "No")")
                                     
-                                    // Add button if pagato is "No"
+                                    // Add button if pagato is "Si"
                                     if !fattura.pagato {
                                         Button(action: {
-                                            selectedCodiceAvviso = fattura.codiceAvviso
-                                            isShowingIstruzioni = true
+                                            selectedFattura = fattura
+                                            
                                         }) {
                                             Text("Visualizza Istruzioni")
                                                 .font(.subheadline)
@@ -76,8 +78,8 @@ struct TaxView: View {
             }
             .navigationTitle("Tasse")
             // Present IstruzioniView as a sheet
-            .sheet(isPresented: $isShowingIstruzioni) {
-                IstruzioniView(codiceAvviso: selectedCodiceAvviso)
+            .sheet(item: $selectedFattura) { fattura in
+                IstruzioniView(codiceAvviso: fattura.codiceAvviso, price: fattura.importoFattura * 100)
             }
         }
     }

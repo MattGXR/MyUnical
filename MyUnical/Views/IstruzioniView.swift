@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct IstruzioniView: View {
-    let codiceAvviso: String
-    let codiceFiscaleEnteCreditore: String = "80003950781" // Static data
+    var codiceAvviso: String
+    let codiceFiscaleEnteCreditore: String = "80003950781"
+    var price: Double
     
     @Environment(\.presentationMode) var presentationMode // To dismiss the sheet
     
@@ -20,16 +21,16 @@ struct IstruzioniView: View {
                     // Sample payment instructions
                     Text("""
                         Per effettuare il pagamento della tua fattura, segui questi passaggi:
-
+                        
                         1. Apri l'app IO.
                         2. Spostati nella sezione "Inquadra".
                         3. Cambia modalità in "Digita".
                         4. Inserisci il codice avviso e codice fiscale ente creditore che trovi in questa pagina.
                         5. Completa la transazione, ti sarà inviata la ricevuta via email.
-
+                        
                         Assicurati di controllare attentamente i dettagli prima di finalizzare il pagamento.
                         """)
-                        .font(.body)
+                    .font(.body)
                     
                     // Display Codice Avviso with Copy Button
                     HStack {
@@ -70,6 +71,13 @@ struct IstruzioniView: View {
                         .accessibilityLabel("Copia Codice Fiscale Ente Creditore")
                     }
                     .padding(.vertical, 8)
+                    VStack(alignment: .center,spacing: 12){
+                        Text("Codice QR Avviso")
+                        AsyncImage(url: URL(string: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PAGOPA|002|\(codiceAvviso)|\(codiceFiscaleEnteCreditore)|\(Int(price))"))
+                            .background(Color.black)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    
                     
                     Spacer()
                 }
@@ -92,19 +100,19 @@ struct IstruzioniView: View {
     /// Copies the provided text to the clipboard.
     /// - Parameter text: The text to copy.
     private func copyToClipboard(text: String) {
-        #if os(iOS)
+#if os(iOS)
         UIPasteboard.general.string = text
-        #elseif os(macOS)
+#elseif os(macOS)
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(text, forType: .string)
-        #endif
+#endif
     }
 }
 
 // Preview (optional)
 struct IstruzioniView_Previews: PreviewProvider {
     static var previews: some View {
-        IstruzioniView(codiceAvviso: "ABC123456789")
+        IstruzioniView(codiceAvviso: "ABC123456789", price: 1650)
     }
 }
