@@ -69,10 +69,22 @@
     "Chiudi" : {
 
     },
+    "Codice Avviso:" : {
+
+    },
     "Codice Avviso: %@" : {
 
     },
+    "Codice Fiscale Ente Creditore:" : {
+
+    },
     "Connessione Assente" : {
+
+    },
+    "Copia Codice Avviso" : {
+
+    },
+    "Copia Codice Fiscale Ente Creditore" : {
 
     },
     "Corso di Studi" : {
@@ -124,6 +136,9 @@
 
     },
     "Iscriviti" : {
+
+    },
+    "Istruzioni" : {
 
     },
     "Key" : {
@@ -184,6 +199,9 @@
     "Password" : {
 
     },
+    "Per effettuare il pagamento della tua fattura, segui questi passaggi:\n\n1. Apri l'app IO.\n2. Spostati nella sezione \"Inquadra\".\n3. Cambia modalità in \"Digita\".\n4. Inserisci il codice avviso e codice fiscale ente creditore che trovi in questa pagina.\n5. Completa la transazione, ti sarà inviata la ricevuta via email.\n\nAssicurati di controllare attentamente i dettagli prima di finalizzare il pagamento." : {
+
+    },
     "Prenota Appelli" : {
 
     },
@@ -202,7 +220,7 @@
     "Simulatore" : {
 
     },
-    "Situazione pagamenti" : {
+    "Stato pagamenti" : {
 
     },
     "Tasse" : {
@@ -218,6 +236,9 @@
 
     },
     "Valuta Lode" : {
+
+    },
+    "Visualizza Istruzioni" : {
 
     },
     "Visualizza tutti i voti" : {

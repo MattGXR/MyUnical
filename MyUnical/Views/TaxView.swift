@@ -11,12 +11,16 @@ struct TaxView: View {
     @EnvironmentObject var networkMonitor: NetworkMonitor // Access NetworkMonitor
     @ObservedObject private var networkManager = NetworkManager.shared
     
+    // State variables to handle sheet presentation
+    @State private var isShowingIstruzioni = false
+    @State private var selectedCodiceAvviso: String = ""
+    
     var body: some View {
         NavigationView {
             VStack {
                 Form {
                     // Situazione Pagamenti Section
-                    Section(header: Text("Situazione pagamenti")) {
+                    Section(header: Text("Stato pagamenti")) {
                         HStack(spacing: 16) {
                             // Colored Circle
                             Circle()
@@ -50,15 +54,31 @@ struct TaxView: View {
                                     Text("Descrizione: \(fattura.desMav1)")
                                     
                                     Text("Pagato: \(fattura.pagato ? "Sì" : "No")")
+                                    
+                                    // Add button if pagato is "No"
+                                    if !fattura.pagato {
+                                        Button(action: {
+                                            selectedCodiceAvviso = fattura.codiceAvviso
+                                            isShowingIstruzioni = true
+                                        }) {
+                                            Text("Visualizza Istruzioni")
+                                                .font(.subheadline)
+                                                .foregroundColor(.blue)
+                                        }
+                                        .padding(.top, 4)
+                                    }
                                 }
                                 .padding(.vertical, 4)
                             }
-                            
                         }
                     }
                 }
             }
             .navigationTitle("Tasse")
+            // Present IstruzioniView as a sheet
+            .sheet(isPresented: $isShowingIstruzioni) {
+                IstruzioniView(codiceAvviso: selectedCodiceAvviso)
+            }
         }
     }
     
@@ -104,6 +124,7 @@ struct TaxView: View {
             return .black
         }
     }
+    
     private func getNumeroFatturaColor(_ fattura: Fattura) -> Color {
         if fattura.pagato {
             return .green
