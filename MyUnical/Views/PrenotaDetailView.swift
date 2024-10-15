@@ -44,7 +44,7 @@ struct PrenotaDetailView: View {
                 title: Text("Avviso"),
                 message: Text(alertMessage),
                 dismissButton: .default(Text("OK")) {
-                    if alertMessage == "Prenotazione effettuata con successo" {
+                    if alertMessage == "Prenotazione effettuata con successo" || alertMessage == "Nessun appello disponibile"{
                         dismiss()
                     }
                 }
