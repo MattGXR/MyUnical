@@ -7,6 +7,9 @@
     "%.1f" : {
 
     },
+    "%@" : {
+
+    },
     "%@ %@" : {
       "localizations" : {
         "it" : {
@@ -43,9 +46,6 @@
 
     },
     "Annulla" : {
-
-    },
-    "Appelli disponibili per: %@" : {
 
     },
     "Avviso" : {
@@ -96,7 +96,7 @@
     "Dashboard" : {
 
     },
-    "Data Inizio Appello" : {
+    "Data e Ora" : {
 
     },
     "Data Pagamento: %@" : {
@@ -167,12 +167,6 @@
 
     },
     "Logout" : {
-
-    },
-    "Nessun appello disponibile" : {
-
-    },
-    "Nessun appello disponibile." : {
 
     },
     "Nessun pagamento disponibile." : {

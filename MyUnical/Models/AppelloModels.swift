@@ -12,8 +12,11 @@ struct Appello: Codable, Identifiable, Equatable {
     let dataInizioIscr: String?
     let dataFineIscr: String?
     let dataInizioApp: String?
+    let oraEsa: String?
     let desApp: String?
     let note: String?
+    let cdsId: Int?
+    let adId: Int?
     let numIscritti: Int?
     let presidenteNome: String?
     let presidenteCognome: String?
@@ -24,8 +27,11 @@ struct Appello: Codable, Identifiable, Equatable {
         case dataInizioIscr
         case dataFineIscr
         case dataInizioApp
+        case oraEsa
         case desApp
         case note
+        case cdsId
+        case adId
         case numIscritti
         case presidenteNome
         case presidenteCognome

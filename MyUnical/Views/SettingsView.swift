@@ -75,6 +75,11 @@ struct SettingsView: View {
         // Clear data in NetworkManager
         networkManager.clearData()
         
+        // Clear cached data
+        URLSession.shared.reset {
+                print("URLSession cache cleared.")
+            }
+        
         // Update app state to show login screen
         appState.isLoggedIn = false
     }

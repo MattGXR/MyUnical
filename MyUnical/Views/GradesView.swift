@@ -117,7 +117,6 @@ struct GradesView: View {
     }
 }
 
-// Grade Card View
 struct GradeCard: View {
     let voto: Voto
     
@@ -129,7 +128,7 @@ struct GradeCard: View {
                     Circle()
                         .fill(Color.blue)
                         .frame(width: 50, height: 50)
-                    Text("\(voto.voto)")
+                    Text(voto.voto)
                         .font(.headline)
                         .foregroundColor(.white)
                 }
@@ -159,7 +158,6 @@ struct GradeCard: View {
         .padding(.horizontal)
     }
 }
-
 // Extension to hide keyboard
 extension View {
     func hideKeyboard() {

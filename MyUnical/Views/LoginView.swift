@@ -97,7 +97,6 @@ struct LoginView: View {
             }
         }
         .navigationBarHidden(true)
-        // Removed .onAppear { checkLogin() } as AppState handles login state
     }
     
     func login() {

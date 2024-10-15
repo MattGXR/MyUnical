@@ -7,9 +7,9 @@
 import SwiftUI
 
 struct PrenotaView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss 
     @ObservedObject private var networkManager = NetworkManager.shared
-    
+
     var body: some View {
         NavigationView {
             List(networkManager.insegnamenti) { insegnamento in
@@ -27,7 +27,7 @@ struct PrenotaView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Chiudi") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss() // Dismiss the sheet
                     }
                 }
             }
@@ -35,8 +35,3 @@ struct PrenotaView: View {
     }
 }
 
-struct PrenotaView_Previews: PreviewProvider {
-    static var previews: some View {
-        PrenotaView()
-    }
-}

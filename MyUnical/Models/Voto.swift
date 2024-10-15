@@ -10,7 +10,7 @@ import Foundation
 struct Voto: Codable, Identifiable {
     var id = UUID()
     let insegnamento: String
-    let voto: Int
+    let voto: String
     let cfu: Int
     let dataAppello: String
     let date: Date

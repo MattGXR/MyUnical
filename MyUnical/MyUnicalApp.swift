@@ -13,6 +13,7 @@ import SwiftUI
 struct MyUnicalApp: App {
     @StateObject var appState = AppState()
     @ObservedObject var networkMonitor = NetworkMonitor.shared
+    @ObservedObject var networkManager = NetworkManager.shared
     
     var body: some Scene {
         WindowGroup {
@@ -20,6 +21,7 @@ struct MyUnicalApp: App {
                 MyUnicalTabView()
                     .environmentObject(appState)
                     .environmentObject(networkMonitor)
+                    .environmentObject(networkManager)
                     .onAppear {
                         if networkMonitor.isConnected {
                             silentFetch()
