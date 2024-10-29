@@ -35,3 +35,6 @@ struct PrenotaView: View {
     }
 }
 
+#Preview {
+    PrenotaView()
+}

@@ -11,11 +11,11 @@ struct SimulationView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject private var networkManager = NetworkManager.shared
     @State private var newVote: Int = 18 // Default to the minimum allowed grade
-    @State private var selectedCFU: Int = 3 // Default CFU value
+    @State private var selectedCFU: Int = 9 // Default CFU value
     @State private var predictedAverage: Double?
     @State private var showAlert = false
     @State private var alertMessage = ""
-    @State private var showCappedMessage = false // New State for capping message
+    @State private var showCappedMessage = false
     @FocusState private var isInputActive: Bool
     
     // New State Variables for Valuta Lode
@@ -26,7 +26,7 @@ struct SimulationView: View {
     let cfuOptions = [3, 6, 9, 12, 15]
     
     // Valuta Lode options
-    let valutaLodeOptions: [Double] = [33, 31]
+    let valutaLodeOptions: [Double] = [33, 32, 31]
     
     // Maximum allowed average
     let maxAverage: Double = 30.0
@@ -35,10 +35,7 @@ struct SimulationView: View {
         NavigationView {
             ScrollView { // Changed to ScrollView for better handling on smaller screens
                 VStack(spacing: 15) {
-                    Text("Simula nuovo voto")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.primary)
+                    
                     
                     // Voto Input using Stepper
                     HStack {
@@ -117,7 +114,7 @@ struct SimulationView: View {
                             
                             // Inline message if the average was capped
                             if showCappedMessage && predictedAverage == maxAverage {
-                                Text("La media prevista non può superare \(Int(maxAverage)). È stata impostata a \(Int(maxAverage)).")
+                                Text("La media supererebbe \(Int(maxAverage)).")
                                     .foregroundColor(.red)
                                     .font(.subheadline)
                             }
@@ -147,7 +144,7 @@ struct SimulationView: View {
                     Spacer()
                 }
                 .padding()
-                .navigationTitle("Simulatore")
+                .navigationTitle("Simula nuovo voto")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Chiudi") {

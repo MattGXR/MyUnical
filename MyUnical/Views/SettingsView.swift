@@ -15,6 +15,9 @@ struct SettingsView: View {
     private let keychainService = "it.mattiameligeni.MyUnical"
     @State private var showingOfflineAlert = false
     
+    @Environment(\.openURL) var openURL
+
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -35,11 +38,20 @@ struct SettingsView: View {
                                 .foregroundColor(.blue)
                         }
                     }
+                    Section(header: Text("Matricola")) {
+                        Text(networkManager.matricola)
+                    }
                     Section(header: Text("Corso di Studi")) {
                         Text(networkManager.cdsDes)
                     }
                 }
                 Spacer()
+                Button(action: {
+                    email()
+                }) {
+                    Label("Segnalazione", systemImage: "bubble.left.and.exclamationmark.bubble.right")
+                        .foregroundColor(.blue)
+                }
                 Text("© 2024 Mattia Meligeni\nQuest'app non è stata commissionata né approvata dall'Università della Calabria.")
                     .font(.footnote)
                     .multilineTextAlignment(.center)
@@ -63,6 +75,41 @@ struct SettingsView: View {
         if let usernameData = KeychainHelper.shared.read(service: keychainService, account: "username"),
            let username = String(data: usernameData, encoding: .utf8){
             self.username = username
+        }
+    }
+    
+    private func email() {
+        let emailRecipient = "myunical@mattiameligeni.it"
+        let emailSubject = "Segnalazione da MyUnical App"
+        let emailBody = """
+        Ciao,
+
+        Vorrei segnalare il seguente problema/bug/glitch:
+
+        [Descrivi la segnalazione qui]
+
+        Grazie,
+        
+        CF: \(username)
+        Matricola: \(networkManager.matricola)
+        """
+        
+        // URL-encode the subject and body
+        guard let encodedSubject = emailSubject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let encodedBody = emailBody.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            print("Failed to encode email subject or body.")
+            return
+        }
+        
+        // Construct the mailto URL
+        let mailtoURLString = "mailto:\(emailRecipient)?subject=\(encodedSubject)&body=\(encodedBody)"
+        
+        // Convert the string to a URL object
+        if let mailtoURL = URL(string: mailtoURLString) {
+            // Attempt to open the URL
+            openURL(mailtoURL)
+        } else {
+            print("Invalid mailto URL.")
         }
     }
     
@@ -104,10 +151,6 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-            .environmentObject(AppState())
-            .environmentObject(NetworkMonitor.shared)
-    }
+#Preview {
+    SettingsView()
 }

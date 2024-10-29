@@ -16,6 +16,7 @@ class NetworkManager: ObservableObject {
     @Published var cdsDes: String = ""
     @Published var cdsId: Int = 0
     @Published var matId: Int = 0
+    @Published var matricola: String = ""
     @Published var stuId: Int = 0
     @Published var totalCfu: Int = 0
     @Published var media: Double = 0.0
@@ -75,10 +76,12 @@ class NetworkManager: ObservableObject {
                     self.cdsDes = firstTratto.cdsDes
                     self.cdsId = firstTratto.cdsId
                     self.matId = firstTratto.matId
+                    self.matricola = firstTratto.matricola
                     self.aaId = firstTratto.dettaglioTratto.aaIscrId
                     self.stuId = firstTratto.stuId
                     let durataAnni = firstTratto.dettaglioTratto.durataAnni
-                    self.totalCfu = durataAnni == 2 ? 60 : 180
+                    self.totalCfu = durataAnni * 60
+                
                     // Fetch media and grades after authentication
                     self.fetchMedia(username: username, password: password)
                     self.fetchProve(username: username, password: password)
@@ -661,6 +664,7 @@ class NetworkManager: ObservableObject {
             cdsDes: self.cdsDes,
             cdsId : self.cdsId,
             matId: self.matId,
+            matricola: self.matricola,
             persId: self.persId,
             aaId: self.aaId,
             stuId : self.stuId,
@@ -681,6 +685,7 @@ class NetworkManager: ObservableObject {
             self.cdsDes = cachedUserData.cdsDes
             self.cdsId = cachedUserData.cdsId
             self.matId = cachedUserData.matId
+            self.matricola = cachedUserData.matricola
             self.persId = cachedUserData.persId
             self.aaId = cachedUserData.aaId
             self.stuId = cachedUserData.stuId
@@ -699,6 +704,7 @@ struct UserData: Codable {
     let cdsDes: String
     let cdsId: Int
     let matId: Int
+    let matricola: String
     let persId: Int
     let aaId: Int
     let stuId: Int

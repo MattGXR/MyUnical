@@ -39,7 +39,7 @@ struct TaxView: View {
                     // Fatture Section
                     Section(header: Text("Fatture")) {
                         if networkManager.fatture.isEmpty {
-                            Text("Nessun pagamento disponibile.")
+                            Text("Nessuna fattura disponibile.")
                                 .foregroundColor(.gray)
                         } else {
                             List(sortedFatture) { fattura in
@@ -63,7 +63,7 @@ struct TaxView: View {
                                             selectedFattura = fattura
                                             
                                         }) {
-                                            Text("Visualizza Istruzioni")
+                                            Text("Istruzioni Pagamento")
                                                 .font(.subheadline)
                                                 .foregroundColor(.blue)
                                         }
@@ -143,3 +143,6 @@ struct TaxView: View {
     }
 }
 
+#Preview {
+    TaxView()
+}

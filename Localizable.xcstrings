@@ -144,18 +144,14 @@
     "Istruzioni" : {
 
     },
+    "Istruzioni Pagamento" : {
+
+    },
     "Key" : {
       "extractionState" : "manual"
     },
-    "La media prevista non può superare %lld. È stata impostata a %lld." : {
-      "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "La media prevista non può superare %1$lld. È stata impostata a %2$lld."
-          }
-        }
-      }
+    "La media supererebbe %lld." : {
+
     },
     "Libretto" : {
 
@@ -169,7 +165,10 @@
     "Logout" : {
 
     },
-    "Nessun pagamento disponibile." : {
+    "Matricola" : {
+
+    },
+    "Nessuna fattura disponibile." : {
 
     },
     "Note" : {
@@ -208,13 +207,13 @@
     "Scadenza: %@" : {
 
     },
+    "Segnalazione" : {
+
+    },
     "Seleziona Valore Lode" : {
 
     },
     "Simula nuovo voto" : {
-
-    },
-    "Simulatore" : {
 
     },
     "Stato pagamenti" : {
@@ -233,9 +232,6 @@
 
     },
     "Valuta Lode" : {
-
-    },
-    "Visualizza Istruzioni" : {
 
     },
     "Visualizza tutti i voti" : {
