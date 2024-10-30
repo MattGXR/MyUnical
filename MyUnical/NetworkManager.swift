@@ -654,6 +654,7 @@ class NetworkManager: ObservableObject {
         // Remove cached data
         DataPersistence.shared.save([Voto](), to: "voti.json")
         DataPersistence.shared.save("", to: "userData.json")
+        DataPersistence.shared.save("", to: "schedule.json")
     }
     
     /// Saves the current user data to local storage.

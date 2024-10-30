@@ -33,6 +33,12 @@ struct MyUnicalTabView: View {
                     Image(systemName: "dollarsign.circle.fill")
                     Text("Tasse")
                 }
+            WeeklyScheduleView()
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("Orario")
+                }
+                .tag(2)
             SettingsView()
                 .tabItem {
                     Image(systemName: "gear")

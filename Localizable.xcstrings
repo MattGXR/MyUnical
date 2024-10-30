@@ -10,6 +10,16 @@
     "%@" : {
 
     },
+    "%@ - %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
     "%@ %@" : {
       "localizations" : {
         "it" : {
@@ -36,16 +46,25 @@
     "© 2024 Mattia Meligeni\nQuest'app non è stata commissionata né approvata dall'Università della Calabria." : {
 
     },
+    "Abilita" : {
+
+    },
     "Account" : {
 
     },
     "Aggiorna dati" : {
 
     },
+    "Aggiungi Lezione" : {
+
+    },
     "Al momento sei offline, vengono mostrati gli ultimi dati disponibili." : {
 
     },
     "Annulla" : {
+
+    },
+    "Aula (opzionale)" : {
 
     },
     "Avviso" : {
@@ -57,7 +76,13 @@
     "Caricamento..." : {
 
     },
+    "CDS: %@" : {
+
+    },
     "Cerca insegnamento..." : {
+
+    },
+    "Cerca Lezioni" : {
 
     },
     "CFU" : {
@@ -81,6 +106,9 @@
     "Codice QR Avviso" : {
 
     },
+    "Colore" : {
+
+    },
     "Connessione Assente" : {
 
     },
@@ -88,9 +116,6 @@
 
     },
     "Copia Codice Fiscale Ente Creditore" : {
-
-    },
-    "Corso di Studi" : {
 
     },
     "Dashboard" : {
@@ -108,16 +133,37 @@
     "Dettagli Appello" : {
 
     },
+    "Dettagli Lezione" : {
+
+    },
+    "Disabilita" : {
+
+    },
+    "Donazioni" : {
+
+    },
     "È necessaria una connessione internet per prenotare un appello" : {
 
     },
+    "Elimina" : {
+
+    },
     "Emissione: %@" : {
+
+    },
+    "Errore" : {
 
     },
     "Fatture" : {
 
     },
     "Fine Iscrizione" : {
+
+    },
+    "Giorno" : {
+
+    },
+    "https://www.paypal.me/mattiameligeni" : {
 
     },
     "Importo dovuto: €%.2f" : {
@@ -130,6 +176,9 @@
 
     },
     "Impostazioni" : {
+
+    },
+    "Info" : {
 
     },
     "Inizio Iscrizione" : {
@@ -165,13 +214,28 @@
     "Logout" : {
 
     },
-    "Matricola" : {
+    "Matricola: %@" : {
+
+    },
+    "Modifica" : {
+
+    },
+    "Modifica Lezione" : {
 
     },
     "Nessuna fattura disponibile." : {
 
     },
+    "Nessuna lezione" : {
+
+    },
+    "Non hai ancora aggiunto nessuna lezione." : {
+
+    },
     "Note" : {
+
+    },
+    "Note (max %lld caratteri)" : {
 
     },
     "Numero Fattura: %@" : {
@@ -189,6 +253,15 @@
     "OK" : {
 
     },
+    "Ora Fine" : {
+
+    },
+    "Ora Inizio" : {
+
+    },
+    "Orario" : {
+
+    },
     "Pagato: %@" : {
 
     },
@@ -204,7 +277,13 @@
     "Presidente" : {
 
     },
+    "Salva" : {
+
+    },
     "Scadenza: %@" : {
+
+    },
+    "Se desideri aiutare il mantenimento di quest'app e apprezzi il lavoro svolto, puoi donare qualsiasi importo al seguente indirizzo:" : {
 
     },
     "Segnalazione" : {
@@ -220,6 +299,12 @@
 
     },
     "Tasse" : {
+
+    },
+    "Titolo" : {
+
+    },
+    "Tutti" : {
 
     },
     "Ultimi voti" : {

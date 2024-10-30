@@ -38,12 +38,17 @@ struct SettingsView: View {
                                 .foregroundColor(.blue)
                         }
                     }
-                    Section(header: Text("Matricola")) {
-                        Text(networkManager.matricola)
+                    Section(header: Text("Info")) {
+                        Text("Matricola: \(networkManager.matricola)")
+                        Text("CDS: \(networkManager.cdsDes)")
                     }
-                    Section(header: Text("Corso di Studi")) {
-                        Text(networkManager.cdsDes)
+                    
+                    Section(header: Text("Donazioni")){
+                        Text("Se desideri aiutare il mantenimento di quest'app e apprezzi il lavoro svolto, puoi donare qualsiasi importo al seguente indirizzo:")
+                        Text("https://www.paypal.me/mattiameligeni")
                     }
+                    
+                    
                 }
                 Spacer()
                 Button(action: {
