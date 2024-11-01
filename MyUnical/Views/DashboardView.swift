@@ -27,14 +27,14 @@ struct DashboardView: View {
                     
                     // Cards with key information
                     HStack(spacing: 20) {
-                        DashboardCard(title: "Media", value: String(format: "%.2f", networkManager.media), color: .blue)
-                        DashboardCard(title: "CFU", value: "\(Int(networkManager.currentCfu))/\(networkManager.totalCfu)", color: .green)
+                        DashboardCard(title: NSLocalizedString("Media", comment: "Media"), value: String(format: "%.2f", networkManager.media), color: .blue)
+                        DashboardCard(title: NSLocalizedString("CFU", comment: "CFU"), value: "\(Int(networkManager.currentCfu))/\(networkManager.totalCfu)", color: .green)
                     }
                     .padding(.horizontal)
                     
                     HStack(spacing: 20) {
-                        DashboardCard(title: "Base Laurea", value: String(format: "%.2f", networkManager.baseL), color: .purple)
-                        DashboardCard(title: "CFU Rimanenti", value: "\(Int(Double(networkManager.totalCfu)-networkManager.currentCfu))", color: .red)
+                        DashboardCard(title: NSLocalizedString("Base Laurea", comment: "Base Laurea"), value: String(format: "%.2f", networkManager.baseL), color: .purple)
+                        DashboardCard(title: NSLocalizedString("CFU Rimanenti", comment: "CFU Rimanenti"), value: "\(Int(Double(networkManager.totalCfu)-networkManager.currentCfu))", color: .red)
                     }
                     .padding(.horizontal)
                     
@@ -104,11 +104,11 @@ struct DashboardView: View {
     var greeting: String {
         switch networkManager.sex {
         case "F":
-            return "Benvenuta"
+            return NSLocalizedString("Benvenuta", comment: "Greeting for female users")
         case "M":
-            return "Benvenuto"
+            return NSLocalizedString("Benvenuto", comment: "Greeting for male users")
         default:
-            return "Benvenuto/a"
+            return NSLocalizedString("Benvenut*", comment: "Generic greeting")
         }
     }
     

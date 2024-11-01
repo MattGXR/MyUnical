@@ -55,7 +55,7 @@ struct TaxView: View {
                                     Text("Data Pagamento: \(fattura.dataPagamento)")
                                     Text("Descrizione: \(fattura.desMav1)")
                                     
-                                    Text("Pagato: \(fattura.pagato ? "Sì" : "No")")
+                                    Text("Pagato: \(fattura.pagato ? NSLocalizedString("Sì", comment: "") : NSLocalizedString("No", comment: ""))")
                                     
                                     // Add button if pagato is "Si"
                                     if !fattura.pagato {
@@ -63,7 +63,7 @@ struct TaxView: View {
                                             selectedFattura = fattura
                                             
                                         }) {
-                                            Text("Istruzioni Pagamento")
+                                            Text("Come Pagare")
                                                 .font(.subheadline)
                                                 .foregroundColor(.blue)
                                         }

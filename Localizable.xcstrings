@@ -2,13 +2,13 @@
   "sourceLanguage" : "it",
   "strings" : {
     "" : {
-
+      "shouldTranslate" : false
     },
     "%.1f" : {
-
+      "shouldTranslate" : false
     },
     "%@" : {
-
+      "shouldTranslate" : false
     },
     "%@ - %@" : {
       "localizations" : {
@@ -18,7 +18,8 @@
             "value" : "%1$@ - %2$@"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "%@ %@" : {
       "localizations" : {
@@ -28,7 +29,8 @@
             "value" : "%1$@ %2$@"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "%@, %@" : {
       "localizations" : {
@@ -38,304 +40,1094 @@
             "value" : "%1$@, %2$@"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "%lld" : {
-
+      "shouldTranslate" : false
     },
     "© 2024 Mattia Meligeni\nQuest'app non è stata commissionata né approvata dall'Università della Calabria." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "© 2024 Mattia Meligeni\nThis app has not been requested nor approved by the University of Calabria"
+          }
+        }
+      }
     },
     "Abilita" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable"
+          }
+        }
+      }
     },
     "Account" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
     },
     "Aggiorna dati" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reload"
+          }
+        }
+      }
     },
     "Aggiungi Lezione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Lecture"
+          }
+        }
+      }
     },
     "Al momento sei offline, vengono mostrati gli ultimi dati disponibili." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You are currently offline, cached data is shown."
+          }
+        }
+      }
     },
     "Annulla" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
     },
     "Aula (opzionale)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Room (optional)"
+          }
+        }
+      }
     },
     "Avviso" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alert"
+          }
+        }
+      }
+    },
+    "Base Laurea" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Degree Base"
+          }
+        }
+      }
+    },
+    "Benvenut*" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benvenuto/a"
+          }
+        }
+      }
+    },
+    "Benvenuta" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        }
+      }
+    },
+    "Benvenuto" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        }
+      }
     },
     "Calcola" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compute"
+          }
+        }
+      }
     },
     "Caricamento..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading…"
+          }
+        }
+      }
     },
     "CDS: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Degree name: %@"
+          }
+        }
+      }
     },
     "Cerca insegnamento..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter course…"
+          }
+        }
+      }
     },
-    "Cerca Lezioni" : {
-
+    "Cerca lezioni..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter lectures…"
+          }
+        }
+      }
     },
     "CFU" : {
-
+      "comment" : "CFU",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credits"
+          }
+        }
+      }
+    },
+    "CFU Rimanenti" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remaining Credits"
+          }
+        }
+      }
     },
     "CFU: %lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credits: %lld"
+          }
+        }
+      }
     },
     "Chiudi" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        }
+      }
     },
     "Codice Avviso:" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payment Code:"
+          }
+        }
+      }
     },
     "Codice Avviso: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payment Code: %@"
+          }
+        }
+      }
     },
     "Codice Fiscale Ente Creditore:" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer Fiscal Code:"
+          }
+        }
+      }
     },
     "Codice QR Avviso" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "QR Code"
+          }
+        }
+      }
     },
     "Colore" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color"
+          }
+        }
+      }
+    },
+    "Come Pagare" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to pay"
+          }
+        }
+      }
     },
     "Connessione Assente" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No connection"
+          }
+        }
+      }
     },
     "Copia Codice Avviso" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Codice Avviso"
+          }
+        }
+      }
     },
     "Copia Codice Fiscale Ente Creditore" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Codice Fiscale Ente Creditore"
+          }
+        }
+      }
     },
     "Dashboard" : {
-
+      "shouldTranslate" : false
     },
     "Data e Ora" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date & Time"
+          }
+        }
+      }
     },
     "Data Pagamento: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date Payed: %@"
+          }
+        }
+      }
     },
     "Descrizione: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description: %@"
+          }
+        }
+      }
     },
     "Dettagli Appello" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exam Details"
+          }
+        }
+      }
     },
     "Dettagli Lezione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Details"
+          }
+        }
+      }
     },
     "Disabilita" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable"
+          }
+        }
+      }
     },
     "Donazioni" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contributions"
+          }
+        }
+      }
     },
     "È necessaria una connessione internet per prenotare un appello" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection required to book an exam"
+          }
+        }
+      }
     },
     "Elimina" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
     },
     "Emissione: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issued: %@"
+          }
+        }
+      }
     },
     "Errore" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        }
+      }
     },
     "Fatture" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payments"
+          }
+        }
+      }
     },
     "Fine Iscrizione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Register by"
+          }
+        }
+      }
     },
     "Giorno" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekday"
+          }
+        }
+      }
+    },
+    "Giovedì" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thursday"
+          }
+        }
+      }
     },
     "https://www.paypal.me/mattiameligeni" : {
-
+      "shouldTranslate" : false
     },
     "Importo dovuto: €%.2f" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount due: €%.2f"
+          }
+        }
+      }
     },
     "Importo: €%.2f" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amount: €%.2f"
+          }
+        }
+      }
     },
     "Impossibile aggiornare i dati: non sei connesso a internet." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to retrieve data: no connection."
+          }
+        }
+      }
     },
     "Impostazioni" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
     },
     "Indietro" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
     },
     "Info" : {
-
+      "shouldTranslate" : false
     },
     "Inizio Iscrizione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Register from"
+          }
+        }
+      }
     },
     "Input non valido" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid input"
+          }
+        }
+      }
     },
     "Iscriviti" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Book"
+          }
+        }
+      }
     },
     "Istruzioni" : {
-
-    },
-    "Istruzioni Pagamento" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instruction"
+          }
+        }
+      }
     },
     "Key" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "La media supererebbe %lld." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your average would exceed %lld."
+          }
+        }
+      }
     },
     "Libretto" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Booklet"
+          }
+        }
+      }
     },
     "Login" : {
-
+      "shouldTranslate" : false
     },
     "Login fallito. Per favore controlla i dati inseriti." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login failed. Please check your credentials."
+          }
+        }
+      }
     },
     "Logout" : {
-
+      "shouldTranslate" : false
+    },
+    "Lunedì" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monday"
+          }
+        }
+      }
+    },
+    "Martedì" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuesday"
+          }
+        }
+      }
     },
     "Matricola: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Student ID: %@"
+          }
+        }
+      }
+    },
+    "Media" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Average"
+          }
+        }
+      }
+    },
+    "Mercoledì" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wednesday"
+          }
+        }
+      }
     },
     "Modifica" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modify"
+          }
+        }
+      }
     },
     "Modifica Lezione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modify lecture"
+          }
+        }
+      }
+    },
+    "Nessun appello disponibile" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No exams available"
+          }
+        }
+      }
     },
     "Nessuna fattura disponibile." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No payments available."
+          }
+        }
+      }
     },
     "Nessuna lezione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No lecture"
+          }
+        }
+      }
+    },
+    "No" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
+    },
+    "Non c'è nient'altro da fare" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing else for today"
+          }
+        }
+      }
     },
     "Non hai ancora aggiunto nessuna lezione." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You haven’t added a lecture yet."
+          }
+        }
+      }
     },
     "Note" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
+          }
+        }
+      }
     },
     "Note (max %lld caratteri)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes (max %lld chars)"
+          }
+        }
+      }
     },
     "Numero Fattura: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invoice: %@"
+          }
+        }
+      }
     },
     "Numero Iscritti" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partecipants"
+          }
+        }
+      }
     },
     "Nuova media: %.2f" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New average: %.2f"
+          }
+        }
+      }
     },
     "Offline" : {
-
+      "shouldTranslate" : false
     },
     "OK" : {
-
+      "shouldTranslate" : false
     },
     "Ora" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongoing"
+          }
+        }
+      }
     },
     "Ora Fine" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starts at"
+          }
+        }
+      }
     },
     "Ora Inizio" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ends at"
+          }
+        }
+      }
     },
     "Orario" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schedule"
+          }
+        }
+      }
     },
     "Pagato: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paid: %@"
+          }
+        }
+      }
     },
     "Password" : {
-
+      "shouldTranslate" : false
     },
-    "Per effettuare il pagamento della tua fattura, segui questi passaggi:\n\n1. Apri l'app IO.\n2. Spostati nella sezione \"Inquadra\".\n3. Cambia modalità in \"Digita\".\n4. Inserisci il codice avviso e codice fiscale ente creditore che trovi in questa pagina.\n5. Completa la transazione, ti sarà inviata la ricevuta via email.\n\nAssicurati di controllare attentamente i dettagli prima di finalizzare il pagamento." : {
-
+    "Per effettuare il pagamento della tua fattura, segui questi passaggi:\n\n1. Apri l'app IO o altra app bancaria;\n2. Inquadra il codice QR o incolla i dati sottostanti nella sezione \"Banche o altri canali\".\n3. Completa la transazione, ti sarà inviata la ricevuta via email.\n\nAssicurati di controllare attentamente i dettagli prima di finalizzare il pagamento." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In order to pay your invoice, follow these steps:\n\n1. Open “IO” or any other banking app;\n2. Scan the QR code or paste the codes below in “Banks or other channels”.\n3. Complete your transaction, the confirmation will be sent through email.\n\nMake sure to check carefully the details before paying."
+          }
+        }
+      }
     },
     "Prenota Appelli" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Book Exams"
+          }
+        }
+      }
+    },
+    "Prenotazione effettuata con successo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Booking succesful"
+          }
+        }
+      }
     },
     "Presidente" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chairman"
+          }
+        }
+      }
     },
     "Salva" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
     },
     "Scadenza: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Due: %@"
+          }
+        }
+      }
     },
     "Se desideri aiutare il mantenimento di quest'app e apprezzi il lavoro svolto, puoi donare qualsiasi importo al seguente indirizzo:" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you wish to help maintaining this app and you like the work done, you can donate whichever amount at the following link:"
+          }
+        }
+      }
     },
     "Segnalazione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report"
+          }
+        }
+      }
     },
     "Seleziona Valore Lode" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Lode Value"
+          }
+        }
+      }
+    },
+    "Sì" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        }
+      }
     },
     "Simula nuovo voto" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulate a new grade"
+          }
+        }
+      }
     },
     "Sovrapposizione" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overlap"
+          }
+        }
+      }
     },
     "Stato pagamenti" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payment status"
+          }
+        }
+      }
     },
     "Tasse" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fees"
+          }
+        }
+      }
     },
     "Titolo" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
     },
     "Tutti" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        }
+      }
     },
     "Ultimi voti" : {
-
-    },
-    "Urrà! Non c'è nient'altro da fare" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last grades"
+          }
+        }
+      }
     },
     "Username" : {
-
+      "shouldTranslate" : false
     },
     "Valore Lode" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lode value"
+          }
+        }
+      }
     },
     "Valuta Lode" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insert Lode"
+          }
+        }
+      }
+    },
+    "Venerdì" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Friday"
+          }
+        }
+      }
     },
     "Visualizza tutti i voti" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Grades"
+          }
+        }
+      }
     },
     "Voto: %lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grade: %lld"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

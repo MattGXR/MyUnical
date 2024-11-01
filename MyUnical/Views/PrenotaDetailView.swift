@@ -13,6 +13,7 @@ struct PrenotaDetailView: View {
     
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var shouldDismiss: Bool = false // New State Variable
     @State private var isLoading: Bool = false
     @State private var appelli: [Appello] = []
     @Environment(\.dismiss) private var dismiss // For navigation back
@@ -52,7 +53,7 @@ struct PrenotaDetailView: View {
                 title: Text("Avviso"),
                 message: Text(alertMessage),
                 dismissButton: .default(Text("OK")) {
-                    if alertMessage == "Prenotazione effettuata con successo" || alertMessage == "Nessun appello disponibile"{
+                    if shouldDismiss {
                         dismiss()
                     }
                 }
@@ -112,7 +113,8 @@ struct PrenotaDetailView: View {
                 switch result {
                 case .success(let fetchedAppelli):
                     if fetchedAppelli.isEmpty {
-                        alertMessage = "Nessun appello disponibile"
+                        alertMessage = NSLocalizedString("Nessun appello disponibile", comment: "")
+                        shouldDismiss = true // Set to true to dismiss on alert dismissal
                         showAlert = true
                     } else {
                         appelli = fetchedAppelli
@@ -121,6 +123,7 @@ struct PrenotaDetailView: View {
                     // Optionally, handle specific errors differently
                     print("PrenotaDetailView: Error fetching appelli: \(error.localizedDescription)")
                     alertMessage = "Errore nel recupero degli appelli: \(error.localizedDescription)"
+                    shouldDismiss = false // Do not dismiss on error
                     showAlert = true // Or present a different alert based on the error
                 }
             }
@@ -132,6 +135,7 @@ struct PrenotaDetailView: View {
         guard let cdsId = appello.cdsId, let adId = appello.adId else {
             // Handle the error, maybe show an alert
             alertMessage = "Dati appello non validi."
+            shouldDismiss = false // Do not dismiss on invalid data
             showAlert = true
             return
         }
@@ -140,14 +144,16 @@ struct PrenotaDetailView: View {
             do {
                 try await networkManager.prenotaAppello(cdsId: cdsId, adId: adId, appId: appello.id)
                 isLoading = false
-                alertMessage = "Prenotazione effettuata con successo"
+                alertMessage = NSLocalizedString("Prenotazione effettuata con successo", comment: "")
+                shouldDismiss = true // Set to true to dismiss on success
                 showAlert = true
                 // Optionally, refresh the appelli list
-                // fetchAppelli()
+                // await fetchAppelli()
             } catch {
                 isLoading = false
                 print("PrenotaDetailView: Error prenotando appello: \(error.localizedDescription)")
                 alertMessage = "Errore nella prenotazione: \(error.localizedDescription)"
+                shouldDismiss = false // Do not dismiss on booking error
                 showAlert = true
             }
         }

@@ -5,6 +5,7 @@ import SwiftUI
 /// Enum for days of the week.
 enum Weekday: String, CaseIterable, Identifiable, Comparable, Codable {
     var id: String { self.rawValue }
+    
     case Lunedì, Martedì, Mercoledì, Giovedì, Venerdì
     
     // Conform to Comparable
@@ -21,6 +22,12 @@ enum Weekday: String, CaseIterable, Identifiable, Comparable, Codable {
         case .Giovedì: return 4
         case .Venerdì: return 5
         }
+    }
+    
+    /// Computed property to get the localized name of the weekday
+    var localizedName: String {
+        // Use the enum case's raw value as the localization key
+        NSLocalizedString("\(self.rawValue)", comment: "Name of the weekday")
     }
 }
 
@@ -186,7 +193,7 @@ struct SearchAndFilterView: View {
             HStack {
                 HStack {
                     Image(systemName: "magnifyingglass")
-                    TextField("Cerca Lezioni", text: $searchText)
+                    TextField("Cerca lezioni...", text: $searchText)
                         .textFieldStyle(PlainTextFieldStyle())
                     if !searchText.isEmpty {
                         Button(action: {
@@ -207,7 +214,7 @@ struct SearchAndFilterView: View {
             Picker("Giorno", selection: $selectedDayFilter) {
                 Text("Tutti").tag(Weekday?.none)
                 ForEach(Weekday.allCases) { day in
-                    Text(day.rawValue).tag(Optional(day))
+                    Text(day.localizedName).tag(Optional(day))
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
@@ -260,7 +267,7 @@ struct LectureListView: View {
                             .scaledToFit()
                             .frame(height: 100)
                             .foregroundColor(.blue)
-                        Text("Urrà! Non c'è nient'altro da fare")
+                        Text("Non c'è nient'altro da fare")
                             .font(.title2)
                             .multilineTextAlignment(.center)
                             .padding()
@@ -269,7 +276,7 @@ struct LectureListView: View {
                 }
             } else {
                 ForEach(groupedLectures.keys.sorted(), id: \.self) { day in
-                    Section(header: Text(day.rawValue)) {
+                    Section(header: Text(day.localizedName)) {
                         ForEach(groupedLectures[day]!) { lecture in
                             LectureRow(
                                 lecture: lecture,
@@ -499,7 +506,7 @@ struct AddEditLectureView: View {
                     TextField("Titolo", text: $title)
                     Picker("Giorno", selection: $selectedDay) {
                         ForEach(Weekday.allCases) { day in
-                            Text(day.rawValue).tag(day)
+                            Text(day.localizedName).tag(day)
                         }
                     }
                     

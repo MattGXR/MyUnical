@@ -22,11 +22,9 @@ struct IstruzioniView: View {
                     Text("""
                         Per effettuare il pagamento della tua fattura, segui questi passaggi:
                         
-                        1. Apri l'app IO.
-                        2. Spostati nella sezione "Inquadra".
-                        3. Cambia modalità in "Digita".
-                        4. Inserisci il codice avviso e codice fiscale ente creditore che trovi in questa pagina.
-                        5. Completa la transazione, ti sarà inviata la ricevuta via email.
+                        1. Apri l'app IO o altra app bancaria;
+                        2. Inquadra il codice QR o incolla i dati sottostanti nella sezione "Banche o altri canali".
+                        3. Completa la transazione, ti sarà inviata la ricevuta via email.
                         
                         Assicurati di controllare attentamente i dettagli prima di finalizzare il pagamento.
                         """)
