@@ -36,6 +36,14 @@ struct PrenotaDetailView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure VStack takes full space
         .navigationTitle("Dettagli Appello")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true) // Hide default back button
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: { dismiss() }) {
+                            Text("Indietro") // Custom back button text
+                        }
+                    }
+                }
         .onAppear {
             fetchAppelli()
         }
@@ -141,3 +149,6 @@ struct PrenotaDetailView: View {
     }
 }
 
+#Preview {
+    PrenotaDetailView(insegnamento: Insegnamento(adDes: "Prova", adDefAppId: 134))
+}

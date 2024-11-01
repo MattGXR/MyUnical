@@ -11,10 +11,14 @@ struct Lecture: Identifiable, Equatable, Codable {
     var endTime: Date
     var location: String?
     var isDisabled: Bool = false
-    var colorName: String // Store color as a string name
+    var colorName: String  // Store color as a string name
     var notes: String?
     
-    init(id: UUID = UUID(), title: String, day: Weekday, startTime: Date, endTime: Date, location: String?, isDisabled: Bool = false, colorName: String, notes: String?) {
+    init(
+        id: UUID = UUID(), title: String, day: Weekday, startTime: Date,
+        endTime: Date, location: String?, isDisabled: Bool = false,
+        colorName: String, notes: String?
+    ) {
         self.id = id
         self.title = title
         self.day = day
@@ -94,32 +98,47 @@ struct WeeklyScheduleView: View {
     @State private var showAddLectureSheet: Bool = false
     @State private var lectureToEdit: Lecture? = nil
     @State private var showNoLecturesAlert: Bool = false
+    @State private var showCurrentLectures: Bool = false  // New State Variable
     
     var body: some View {
         NavigationView {
             VStack {
                 SearchAndFilterView(
                     searchText: $searchText,
-                    selectedDayFilter: $selectedDayFilter
+                    selectedDayFilter: $selectedDayFilter,
+                    showCurrentLectures: $showCurrentLectures  // Pass the binding
                 )
-                LectureListView(lectures: $lectures, searchText: $searchText, selectedDayFilter: $selectedDayFilter, lectureToEdit: $lectureToEdit, showAddLectureSheet: $showAddLectureSheet)
+                LectureListView(
+                    lectures: $lectures,
+                    searchText: $searchText,
+                    selectedDayFilter: $selectedDayFilter,
+                    lectureToEdit: $lectureToEdit,
+                    showAddLectureSheet: $showAddLectureSheet,
+                    showCurrentLectures: $showCurrentLectures  // Pass the binding
+                )
             }
             .navigationBarTitle("Orario")
-            .navigationBarItems(trailing: Button(action: {
-                lectureToEdit = nil
-                showAddLectureSheet = true
-            }) {
-                Image(systemName: "plus")
-            })
+            .navigationBarItems(
+                trailing: Button(action: {
+                    lectureToEdit = nil
+                    showAddLectureSheet = true
+                }) {
+                    Image(systemName: "plus")
+                }
+            )
             .sheet(isPresented: $showAddLectureSheet) {
-                AddEditLectureView(lectures: $lectures, lectureToEdit: $lectureToEdit)
+                AddEditLectureView(
+                    lectures: $lectures, lectureToEdit: $lectureToEdit)
             }
             .onAppear {
                 loadLectures()
                 setInitialDayFilter()
             }
             .alert(isPresented: $showNoLecturesAlert) {
-                Alert(title: Text("Nessuna lezione"), message: Text("Non hai ancora aggiunto nessuna lezione."), dismissButton: .default(Text("OK")))
+                Alert(
+                    title: Text("Nessuna lezione"),
+                    message: Text("Non hai ancora aggiunto nessuna lezione."),
+                    dismissButton: .default(Text("OK")))
             }
             .onChange(of: lectures) { _ in
                 saveLectures()
@@ -129,27 +148,38 @@ struct WeeklyScheduleView: View {
     
     /// Sets the initial day filter to the current weekday.
     func setInitialDayFilter() {
+        if let currentWeekday = currentWeekday() {
+            selectedDayFilter = currentWeekday
+        } else {
+            selectedDayFilter = nil
+        }
+    }
+    
+    /// Returns the current weekday as a `Weekday` enum.
+    func currentWeekday() -> Weekday? {
         let weekdayNumber = Calendar.current.component(.weekday, from: Date())
         // Sunday = 1, Monday = 2, ..., Saturday = 7
         switch weekdayNumber {
         case 2:
-            selectedDayFilter = .Lunedì
+            return .Lunedì
         case 3:
-            selectedDayFilter = .Martedì
+            return .Martedì
         case 4:
-            selectedDayFilter = .Mercoledì
+            return .Mercoledì
         case 5:
-            selectedDayFilter = .Giovedì
+            return .Giovedì
         case 6:
-            selectedDayFilter = .Venerdì
+            return .Venerdì
         default:
-            selectedDayFilter = nil
+            return nil
         }
     }
     
     /// Loads lectures from the "schedule.json" file.
     func loadLectures() {
-        if let loadedLectures = DataPersistence.shared.load("schedule.json", as: [Lecture].self) {
+        if let loadedLectures = DataPersistence.shared.load(
+            "schedule.json", as: [Lecture].self)
+        {
             lectures = loadedLectures
         } else {
             lectures = []
@@ -170,6 +200,7 @@ struct WeeklyScheduleView: View {
 struct SearchAndFilterView: View {
     @Binding var searchText: String
     @Binding var selectedDayFilter: Weekday?
+    @Binding var showCurrentLectures: Bool // New Binding
     
     var body: some View {
         VStack {
@@ -194,18 +225,41 @@ struct SearchAndFilterView: View {
             }
             .padding()
             
-            // Weekday Filter Bar (Always Visible)
-            Picker("Giorno", selection: $selectedDayFilter) {
-                Text("Tutti").tag(Weekday?.none)
-                ForEach(Weekday.allCases) { day in
-                    Text(day.rawValue).tag(Optional(day))
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding([.leading, .trailing, .bottom])
+            // Weekday Picker
+                        Picker("Giorno", selection: $selectedDayFilter) {
+                            Text("Tutti").tag(Weekday?.none)
+                            ForEach(Weekday.allCases) { day in
+                                Text(day.rawValue).tag(Optional(day))
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding([.leading, .trailing])
+
+                        // "Ora" Button Positioned Underneath the Weekday Picker
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showCurrentLectures.toggle()
+                            }) {
+                                Text("Ora")
+                                    .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                                    .background(showCurrentLectures ? Color.blue : Color.clear)
+                                    .foregroundColor(showCurrentLectures ? .white : .blue)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.blue, lineWidth: 1)
+                                    )
+                                    .cornerRadius(5)
+                            }
+                            Spacer()
+                            
+                        }
+                        .padding([.top, .bottom], 8)
+                        //.padding(.trailing, 17)
         }
     }
 }
+
 
 // MARK: - Lecture List View
 
@@ -215,13 +269,34 @@ struct LectureListView: View {
     @Binding var selectedDayFilter: Weekday?
     @Binding var lectureToEdit: Lecture?
     @Binding var showAddLectureSheet: Bool
+    @Binding var showCurrentLectures: Bool // New Binding
     
     var body: some View {
         List {
-            ForEach(groupedLectures.keys.sorted(), id: \.self) { day in
-                Section(header: Text(day.rawValue)) {
-                    ForEach(groupedLectures[day]!) { lecture in
-                        LectureRow(lecture: lecture)
+            if filteredLectures.isEmpty {
+                // Display "Urrà" message if no lectures are available
+                Section {
+                    VStack {
+                        Image(systemName: "party.popper.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 100)
+                            .foregroundColor(.blue)
+                        Text("Urrà! Non c'è nient'altro da fare")
+                            .font(.title2)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            } else {
+                ForEach(groupedLectures.keys.sorted(), id: \.self) { day in
+                    Section(header: Text(day.rawValue)) {
+                        ForEach(groupedLectures[day]!) { lecture in
+                            LectureRow(
+                                lecture: lecture,
+                                lectures: lectures
+                            )
                             .contentShape(Rectangle())
                             .contextMenu {
                                 Button(action: {
@@ -257,21 +332,31 @@ struct LectureListView: View {
                                 }
                                 .tint(.gray)
                             }
+                        }
                     }
                 }
             }
         }
+        .listStyle(InsetGroupedListStyle())
     }
     
     var filteredLectures: [Lecture] {
         lectures.filter { lecture in
-            (searchText.isEmpty || lecture.title.localizedCaseInsensitiveContains(searchText)) &&
-            (selectedDayFilter == nil || lecture.day == selectedDayFilter)
+            let matchesSearchText = searchText.isEmpty || lecture.title.localizedCaseInsensitiveContains(searchText)
+            let matchesDayFilter = selectedDayFilter == nil || lecture.day == selectedDayFilter
+            let matchesCurrentLecture = !showCurrentLectures || isLectureCurrentlyOngoing(lecture)
+            return matchesSearchText && matchesDayFilter && matchesCurrentLecture
         }
     }
     
     var groupedLectures: [Weekday: [Lecture]] {
-        Dictionary(grouping: filteredLectures) { $0.day }
+        let grouped = Dictionary(grouping: filteredLectures) { $0.day }
+        let sortedGrouped = grouped.mapValues { lectures in
+            lectures.sorted(by: { lecture1, lecture2 in
+                lecture1.normalizedStartTime ?? Date.distantPast < lecture2.normalizedStartTime ?? Date.distantPast
+            })
+        }
+        return sortedGrouped
     }
     
     func deleteLecture(_ lecture: Lecture) {
@@ -285,12 +370,49 @@ struct LectureListView: View {
             lectures[index].isDisabled.toggle()
         }
     }
+    
+    /// Checks if the lecture is currently ongoing
+    func isLectureCurrentlyOngoing(_ lecture: Lecture) -> Bool {
+        guard let lectureStartTimeToday = lecture.normalizedStartTime,
+              let lectureEndTimeToday = lecture.normalizedEndTime else {
+            return false
+        }
+        let now = Date()
+        return lectureStartTimeToday <= now && now <= lectureEndTimeToday
+    }
+}
+
+// Extension for Lecture to get normalized times
+extension Lecture {
+    var normalizedStartTime: Date? {
+        combineDateWithTime(date: Date(), time: startTime)
+    }
+    
+    var normalizedEndTime: Date? {
+        combineDateWithTime(date: Date(), time: endTime)
+    }
+}
+
+// Helper function to combine date and time
+func combineDateWithTime(date: Date, time: Date) -> Date? {
+    let calendar = Calendar.current
+    let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+    let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
+    var combinedComponents = DateComponents()
+    combinedComponents.year = dateComponents.year
+    combinedComponents.month = dateComponents.month
+    combinedComponents.day = dateComponents.day
+    combinedComponents.hour = timeComponents.hour
+    combinedComponents.minute = timeComponents.minute
+    combinedComponents.second = timeComponents.second
+    return calendar.date(from: combinedComponents)
 }
 
 // MARK: - Lecture Row
 
 struct LectureRow: View {
     let lecture: Lecture
+    let lectures: [Lecture]
     @State private var isExpanded: Bool = false
     
     var body: some View {
@@ -308,6 +430,14 @@ struct LectureRow: View {
                 Text(lecture.title)
                     .font(.headline)
                     .foregroundColor(lecture.isDisabled ? .gray : .primary)
+                if isOverlapping() {
+                    Text("Sovrapposizione")
+                        .font(.caption)
+                        .padding(4)
+                        .background(Color.purple)
+                        .foregroundColor(.white)
+                        .cornerRadius(5)
+                }
                 Spacer()
                 if lecture.notes != nil && !lecture.notes!.isEmpty {
                     Button(action: {
@@ -341,6 +471,23 @@ struct LectureRow: View {
         .contentShape(Rectangle())
     }
     
+    /// Checks if the lecture overlaps with any other lecture on the same day.
+    func isOverlapping() -> Bool {
+        for otherLecture in lectures {
+            if otherLecture.id != lecture.id && otherLecture.day == lecture.day && !otherLecture.isDisabled {
+                if let lectureStart = lecture.normalizedStartTime,
+                   let lectureEnd = lecture.normalizedEndTime,
+                   let otherStart = otherLecture.normalizedStartTime,
+                   let otherEnd = otherLecture.normalizedEndTime {
+                    if lectureStart < otherEnd && lectureEnd > otherStart {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    
     func formattedTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
@@ -362,7 +509,8 @@ struct AddEditLectureView: View {
     @State private var startTime: Date = Date()
     @State private var endTime: Date = Date().addingTimeInterval(5400)
     @State private var location: String = ""
-    @State private var selectedColorOption: ColorOption = predefinedColors.first!
+    @State private var selectedColorOption: ColorOption = predefinedColors
+        .first!
     @State private var notes: String = ""
     @State private var noteCharacterLimit: Int = 250
     
@@ -380,20 +528,25 @@ struct AddEditLectureView: View {
                     HStack {
                         Text("Ora Inizio")
                         Spacer()
-                        DatePicker("", selection: $startTime, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(CompactDatePickerStyle())
-                            .labelsHidden()
+                        DatePicker(
+                            "", selection: $startTime,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .datePickerStyle(CompactDatePickerStyle())
+                        .labelsHidden()
                         
                     }
                     HStack {
                         Text("Ora Fine")
                         Spacer()
-                        DatePicker("", selection: $endTime, displayedComponents: .hourAndMinute)
-                            .datePickerStyle(CompactDatePickerStyle())
-                            .labelsHidden()
+                        DatePicker(
+                            "", selection: $endTime,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .datePickerStyle(CompactDatePickerStyle())
+                        .labelsHidden()
                         
                     }
-                    
                     
                     TextField("Aula (opzionale)", text: $location)
                     Picker("Colore", selection: $selectedColorOption) {
@@ -407,7 +560,9 @@ struct AddEditLectureView: View {
                         }
                     }
                 }
-                Section(header: Text("Note (max \(noteCharacterLimit) caratteri)")) {
+                Section(
+                    header: Text("Note (max \(noteCharacterLimit) caratteri)")
+                ) {
                     TextEditor(text: $notes)
                         .frame(height: 100)
                         .onChange(of: notes) { newValue in
@@ -417,22 +572,28 @@ struct AddEditLectureView: View {
                         }
                 }
             }
-            .navigationBarTitle(lectureToEdit == nil ? "Aggiungi Lezione" : "Modifica Lezione")
-            .navigationBarItems(leading: Button("Annulla") {
-                presentationMode.wrappedValue.dismiss()
-            }, trailing: Button("Salva") {
-                saveLecture()
-            })
+            .navigationBarTitle(
+                lectureToEdit == nil ? "Aggiungi Lezione" : "Modifica Lezione"
+            )
+            .navigationBarItems(
+                leading: Button("Annulla") {
+                    presentationMode.wrappedValue.dismiss()
+                },
+                trailing: Button("Salva") {
+                    saveLecture()
+                }
+            )
             .onAppear(perform: populateFields)
         }
         .onAppear {
             UIDatePicker.appearance().minuteInterval = 15
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Errore"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(
+                title: Text("Errore"), message: Text(alertMessage),
+                dismissButton: .default(Text("OK")))
         }
     }
-    
     
     func populateFields() {
         if let lecture = lectureToEdit {
@@ -441,7 +602,10 @@ struct AddEditLectureView: View {
             startTime = lecture.startTime
             endTime = lecture.endTime
             location = lecture.location ?? ""
-            selectedColorOption = predefinedColors.first(where: { $0.colorName == lecture.colorName }) ?? predefinedColors.first!
+            selectedColorOption =
+            predefinedColors.first(where: {
+                $0.colorName == lecture.colorName
+            }) ?? predefinedColors.first!
             notes = lecture.notes ?? ""
         }
     }
