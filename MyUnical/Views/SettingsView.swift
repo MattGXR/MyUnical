@@ -119,21 +119,21 @@ struct SettingsView: View {
     }
     
     private func logout() {
-        // Delete credentials from Keychain
+        // Step 1: Update app state to show the login screen
+        appState.isLoggedIn = false
+        
+        // Step 2: Delete credentials from Keychain
         KeychainHelper.shared.delete(service: keychainService, account: "username")
         KeychainHelper.shared.delete(service: keychainService, account: "password")
         username = ""
         
-        // Clear data in NetworkManager
-        networkManager.clearData()
+        // Step 3: Clear data in NetworkManager
+        networkManager.clearData() // Where all data and JSONs are emptied
         
-        // Clear cached data
+        // Step 4: Clear cached data
         URLSession.shared.reset {
-                print("URLSession cache cleared.")
-            }
-        
-        // Update app state to show login screen
-        appState.isLoggedIn = false
+            print("URLSession cache cleared.")
+        }
     }
     
     private func refreshData() {

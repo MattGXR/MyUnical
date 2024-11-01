@@ -81,17 +81,18 @@ class NetworkManager: ObservableObject {
                     self.stuId = firstTratto.stuId
                     let durataAnni = firstTratto.dettaglioTratto.durataAnni
                     self.totalCfu = durataAnni * 60
-                
-                    // Fetch media and grades after authentication
-                    self.fetchMedia(username: username, password: password)
-                    self.fetchProve(username: username, password: password)
-                    self.fetchInsegnamenti(username: username, password: password)
-                    self.fetchSemaforo(username: username, password: password)
-                    self.fetchFatture(username: username, password: password)
-                    completion(true)
                     
-                    // Save authenticated user data to cache
-                    self.saveUserData()
+                    Task {
+                        await self.fetchMedia(username: username, password: password)
+                        await self.fetchProve(username: username, password: password)
+                        await self.fetchInsegnamenti(username: username, password: password)
+                        await self.fetchSemaforo(username: username, password: password)
+                        await self.fetchFatture(username: username, password: password)
+                        DispatchQueue.main.async {
+                            completion(true)
+                        }
+                        self.saveUserData()
+                    }
                 } else {
                     completion(false)
                 }
@@ -99,7 +100,7 @@ class NetworkManager: ObservableObject {
             .store(in: &self.cancellables)
     }
     
-    func fetchInsegnamenti(username: String, password: String) {
+    func fetchInsegnamenti(username: String, password: String) async {
         // Ensure matId is valid
         guard matId != 0 else { return }
         
@@ -118,301 +119,262 @@ class NetworkManager: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         
-        // Create the data task publisher
-        let cancellable = URLSession.shared.dataTaskPublisher(for: request)
-        // Ensure the response is valid
+        do {
+            // Perform the network request
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Check for HTTP errors
+            if let httpResponse = response as? HTTPURLResponse,
+               !(200...299).contains(httpResponse.statusCode) {
+                throw URLError(.badServerResponse)
+            }
+            
+            // Decode the data
+            let insegnamenti = try JSONDecoder().decode([Insegnamento].self, from: data)
+            
+            // Update the published property on the main thread
+            DispatchQueue.main.async {
+                self.insegnamenti = insegnamenti
+            }
+        } catch {
+            print("Error fetching insegnamenti: \(error)")
+        }
+    }
+    
+    // Updated fetchAppelli with completion handler
+    func fetchAppelli(adId: Int, completion: @escaping (Result<[Appello], Error>) -> Void) {
+        // Ensure matId is valid
+        guard matId != 0 else {
+            print("NetworkManager: Invalid matId: \(matId)")
+            DispatchQueue.main.async {
+                completion(.success([]))
+            }
+            return
+        }
+        
+        // Retrieve credentials from Keychain
+        guard let usernameData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "username"),
+              let passwordData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "password") else {
+            print("NetworkManager: Unable to retrieve credentials from Keychain.")
+            DispatchQueue.main.async {
+                completion(.failure(NetworkError.missingCredentials))
+            }
+            return
+        }
+        
+        let username = String(data: usernameData, encoding: .utf8) ?? ""
+        let password = String(data: passwordData, encoding: .utf8) ?? ""
+        
+        let base64LoginString = "\(username):\(password)"
+            .data(using: .utf8)?
+            .base64EncodedString() ?? ""
+        
+        // Construct URL with query parameters using URLComponents
+        let urlString = "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli/\(cdsId)/\(adId)/?q=APPELLI_PRENOTABILI_E_FUTURI"
+        
+        // Validate the URL
+        guard let url = URL(string: urlString) else {
+            print("NetworkManager: Invalid URL: \(urlString)")
+            DispatchQueue.main.async {
+                completion(.success([]))
+            }
+            return
+        }
+        
+        // Create URLRequest and set Authorization header
+        var request = URLRequest(url: url)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept") // Optional but recommended
+        request.httpMethod = "GET"
+        
+        // Perform the network request using Combine
+        URLSession.shared.dataTaskPublisher(for: request)
+        // Validate response status code and log response data
             .tryMap { result -> Data in
-                guard let httpResponse = result.response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
+                guard let httpResponse = result.response as? HTTPURLResponse else {
+                    throw URLError(.badServerResponse)
+                }
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    if let dataString = String(data: result.data, encoding: .utf8) {
+                        print("NetworkManager: Server returned status code \(httpResponse.statusCode): \(dataString)")
+                    }
                     throw URLError(.badServerResponse)
                 }
                 return result.data
             }
-        // Decode the JSON into an array of Insegnamento
-            .decode(type: [Insegnamento].self, decoder: JSONDecoder())
-        // Switch to the main thread for UI updates
+        // Decode JSON response into [Appello]
+            .decode(type: [Appello].self, decoder: JSONDecoder())
+        // Ensure updates happen on the main thread
             .receive(on: DispatchQueue.main)
-        // Handle the received values
+        // Handle the result
             .sink(receiveCompletion: { completionResult in
                 switch completionResult {
                 case .finished:
-                    // Successfully finished, no action needed
                     break
                 case .failure(let error):
-                    // Handle the error appropriately
-                    print("Error fetching insegnamenti: \(error)")
+                    print("NetworkManager: Error fetching Appelli: \(error.localizedDescription)")
+                    completion(.failure(error))
                 }
-            }, receiveValue: { [weak self] insegnamenti in
-                guard let self = self else { return }
-                
-                self.insegnamenti = insegnamenti
+            }, receiveValue: { receivedAppelli in
+                completion(.success(receivedAppelli))
             })
-        
-        // Store the cancellable to manage the subscription lifecycle
-        cancellable.store(in: &self.cancellables)
+            .store(in: &cancellables)
+        // Define network errors
+        enum NetworkError: Error, LocalizedError {
+            case invalidURL
+            case invalidResponse
+            case missingCredentials
+            
+            var errorDescription: String? {
+                switch self {
+                case .invalidURL:
+                    return "Invalid URL."
+                case .invalidResponse:
+                    return "Invalid response from server."
+                case .missingCredentials:
+                    return "Missing credentials."
+                }
+            }
+        }
     }
     
-    // Updated fetchAppelli with completion handler
-       func fetchAppelli(adId: Int, completion: @escaping (Result<[Appello], Error>) -> Void) {
-           // Ensure matId is valid
-           guard matId != 0 else {
-               print("NetworkManager: Invalid matId: \(matId)")
-               DispatchQueue.main.async {
-                   completion(.success([]))
-               }
-               return
-           }
-           
-           // Retrieve credentials from Keychain
-           guard let usernameData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "username"),
-                 let passwordData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "password") else {
-               print("NetworkManager: Unable to retrieve credentials from Keychain.")
-               DispatchQueue.main.async {
-                   completion(.failure(NetworkError.missingCredentials))
-               }
-               return
-           }
-           
-           let username = String(data: usernameData, encoding: .utf8) ?? ""
-           let password = String(data: passwordData, encoding: .utf8) ?? ""
-           
-           let base64LoginString = "\(username):\(password)"
-               .data(using: .utf8)?
-               .base64EncodedString() ?? ""
-           
-           // Construct URL with query parameters using URLComponents
-           let urlString = "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli/\(cdsId)/\(adId)/?q=APPELLI_PRENOTABILI_E_FUTURI"
-           
-           // Validate the URL
-           guard let url = URL(string: urlString) else {
-               print("NetworkManager: Invalid URL: \(urlString)")
-               DispatchQueue.main.async {
-                   completion(.success([]))
-               }
-               return
-           }
-           
-           // Create URLRequest and set Authorization header
-           var request = URLRequest(url: url)
-           request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-           request.setValue("application/json", forHTTPHeaderField: "Accept") // Optional but recommended
-           request.httpMethod = "GET"
-           
-           // Perform the network request using Combine
-           URLSession.shared.dataTaskPublisher(for: request)
-               // Validate response status code and log response data
-               .tryMap { result -> Data in
-                   guard let httpResponse = result.response as? HTTPURLResponse else {
-                       throw URLError(.badServerResponse)
-                   }
-                   guard (200...299).contains(httpResponse.statusCode) else {
-                       if let dataString = String(data: result.data, encoding: .utf8) {
-                           print("NetworkManager: Server returned status code \(httpResponse.statusCode): \(dataString)")
-                       }
-                       throw URLError(.badServerResponse)
-                   }
-                   return result.data
-               }
-               // Decode JSON response into [Appello]
-               .decode(type: [Appello].self, decoder: JSONDecoder())
-               // Ensure updates happen on the main thread
-               .receive(on: DispatchQueue.main)
-               // Handle the result
-               .sink(receiveCompletion: { completionResult in
-                   switch completionResult {
-                   case .finished:
-                       break
-                   case .failure(let error):
-                       print("NetworkManager: Error fetching Appelli: \(error.localizedDescription)")
-                       completion(.failure(error))
-                   }
-               }, receiveValue: { receivedAppelli in
-                   completion(.success(receivedAppelli))
-               })
-               .store(in: &cancellables)
-           // Define network errors
-           enum NetworkError: Error, LocalizedError {
-               case invalidURL
-               case invalidResponse
-               case missingCredentials
-               
-               var errorDescription: String? {
-                   switch self {
-                   case .invalidURL:
-                       return "Invalid URL."
-                   case .invalidResponse:
-                       return "Invalid response from server."
-                   case .missingCredentials:
-                       return "Missing credentials."
-                   }
-               }
-           }
-       }
-    
-    func prenotaAppello(cdsId: Int, adId: Int, appId: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-            enum NetworkError: Error {
-                case invalidURL
-                case missingCredentials
-                case invalidMatId
-                case badServerResponse
-                // Add other cases as needed
-            }
-            // Ensure matId is valid
-            guard matId != 0 else {
-                print("NetworkManager: Invalid matId: \(matId)")
-                DispatchQueue.main.async {
-                    completion(.failure(NetworkError.invalidMatId))
-                }
-                return
-            }
-            
-            // Retrieve credentials from Keychain
-            guard let usernameData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "username"),
-                  let passwordData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "password") else {
-                print("NetworkManager: Unable to retrieve credentials from Keychain.")
-                DispatchQueue.main.async {
-                    completion(.failure(NetworkError.missingCredentials))
-                }
-                return
-            }
-            
-            let username = String(data: usernameData, encoding: .utf8) ?? ""
-            let password = String(data: passwordData, encoding: .utf8) ?? ""
-            
-            let base64LoginString = "\(username):\(password)"
-                .data(using: .utf8)?
-                .base64EncodedString() ?? ""
-            
-            // Construct URL for POST request
-            let urlString = "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli/\(cdsId)/\(adId)/\(appId)/iscritti"
-            
-            // Validate the URL
-            guard let url = URL(string: urlString) else {
-                print("NetworkManager: Invalid URL: \(urlString)")
-                DispatchQueue.main.async {
-                    completion(.failure(NetworkError.invalidURL))
-                }
-                return
-            }
-            
-            // Create URLRequest and set headers
-            var request = URLRequest(url: url)
-            request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-            request.setValue("application/json", forHTTPHeaderField: "Accept") // Optional but recommended
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type") // If sending a body
-            request.httpMethod = "POST"
-            
-            // If your API requires a body, add it here
-            // For example:
-            // let body: [String: Any] = ["key": "value"]
-            // request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
-            
-            // Perform the network request using Combine
-            URLSession.shared.dataTaskPublisher(for: request)
-                // Validate response status code
-                .tryMap { result -> Void in
-                    guard let httpResponse = result.response as? HTTPURLResponse else {
-                        throw URLError(.badServerResponse)
-                    }
-                    if httpResponse.statusCode == 201 {
-                        // Success
-                        return ()
-                    } else {
-                        if let dataString = String(data: result.data, encoding: .utf8) {
-                            print("NetworkManager: Server returned status code \(httpResponse.statusCode): \(dataString)")
-                        }
-                        throw NetworkError.badServerResponse
-                    }
-                }
-                // Ensure updates happen on the main thread
-                .receive(on: DispatchQueue.main)
-                // Handle the result
-                .sink(receiveCompletion: { completionResult in
-                    switch completionResult {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print("NetworkManager: Error prenotando Appello: \(error.localizedDescription)")
-                        completion(.failure(error))
-                    }
-                }, receiveValue: {
-                    completion(.success(()))
-                })
-                .store(in: &cancellables)
+    func prenotaAppello(cdsId: Int, adId: Int, appId: Int) async throws {
+        enum NetworkError: Error {
+            case invalidURL
+            case missingCredentials
+            case invalidMatId
+            case badServerResponse
         }
+        
+        // Ensure matId is valid
+        guard matId != 0 else {
+            print("NetworkManager: Invalid matId: \(matId)")
+            throw NetworkError.invalidMatId
+        }
+        
+        // Retrieve credentials from Keychain
+        guard let usernameData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "username"),
+              let passwordData = KeychainHelper.shared.read(service: "it.mattiameligeni.MyUnical", account: "password"),
+              let username = String(data: usernameData, encoding: .utf8),
+              let password = String(data: passwordData, encoding: .utf8) else {
+            print("NetworkManager: Unable to retrieve credentials from Keychain.")
+            throw NetworkError.missingCredentials
+        }
+        
+        let base64LoginString = "\(username):\(password)"
+            .data(using: .utf8)?
+            .base64EncodedString() ?? ""
+        
+        // Construct URL for POST request
+        let urlString = "https://unical.esse3.cineca.it/e3rest/api/calesa-service-v1/appelli/\(cdsId)/\(adId)/\(appId)/iscritti"
+        
+        // Validate the URL
+        guard let url = URL(string: urlString) else {
+            print("NetworkManager: Invalid URL: \(urlString)")
+            throw NetworkError.invalidURL
+        }
+        
+        // Create URLRequest and set headers
+        var request = URLRequest(url: url)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        
+        // If your API requires a body, add it here
+        // For example:
+        // let body: [String: Any] = ["key": "value"]
+        // request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        do {
+            // Perform the network request
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Validate response status code
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 201 {
+                    // Success
+                    return
+                } else {
+                    if let dataString = String(data: data, encoding: .utf8) {
+                        print("NetworkManager: Server returned status code \(httpResponse.statusCode): \(dataString)")
+                    }
+                    throw NetworkError.badServerResponse
+                }
+            } else {
+                throw URLError(.badServerResponse)
+            }
+        } catch {
+            print("NetworkManager: Error prenotando Appello: \(error.localizedDescription)")
+            throw error
+        }
+    }
     
-       
-       
     
     /// Fetches the student's average grade (media).
     /// - Parameters:
     ///   - username: The user's username.
     ///   - password: The user's password.
-    func fetchMedia(username: String, password: String) {
+    func fetchMedia(username: String, password: String) async {
         // Ensure matId is valid
         guard matId != 0 else { return }
         
         // Prepare the Base64 encoded credentials
-        let base64LoginString = "\(username):\(password)"
-            .data(using: .utf8)?
-            .base64EncodedString() ?? ""
+        let credentials = "\(username):\(password)"
+        guard let credentialData = credentials.data(using: .utf8) else {
+            print("Failed to encode credentials")
+            return
+        }
+        let base64LoginString = credentialData.base64EncodedString()
         
         // Construct the URL string
         let urlString = "https://unical.esse3.cineca.it/e3rest/api/libretto-service-v2/libretti/\(matId)/medie"
         
         // Validate the URL
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
         
         // Create the URLRequest and set the Authorization header
         var request = URLRequest(url: url)
         request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         
-        // Create the data task publisher
-        let cancellable = URLSession.shared.dataTaskPublisher(for: request)
-        // Ensure the response is valid
-            .tryMap { result -> Data in
-                guard let httpResponse = result.response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    throw URLError(.badServerResponse)
-                }
-                return result.data
+        do {
+            // Perform the network request
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Ensure the response is valid
+            if let httpResponse = response as? HTTPURLResponse,
+               !(200...299).contains(httpResponse.statusCode) {
+                throw URLError(.badServerResponse)
             }
-        // Decode the JSON into an array of MediaElemento
-            .decode(type: [MediaElemento].self, decoder: JSONDecoder())
-        // Switch to the main thread for UI updates
-            .receive(on: DispatchQueue.main)
-        // Handle the received values
-            .sink(receiveCompletion: { completionResult in
-                switch completionResult {
-                case .finished:
-                    // Successfully finished, no action needed
-                    break
-                case .failure(let error):
-                    // Handle the error appropriately
-                    print("Error fetching media: \(error)")
-                }
-            }, receiveValue: { [weak self] mediaElements in
-                guard let self = self else { return }
-                
-                // Extract media where base = 30 and tipoMediaCod = "P", provide default value if nil
+            
+            // Decode the JSON into an array of MediaElemento
+            let mediaElements = try JSONDecoder().decode([MediaElemento].self, from: data)
+            
+            // Update properties on the main thread
+            DispatchQueue.main.async {
+                // Extract media where base = 30 and tipoMediaCod = "P"
                 self.media = mediaElements.first(where: {
                     $0.base == 30 && $0.tipoMediaCod.value == "P"
-                })?.media ?? 0.0 // Replace 0.0 with an appropriate default
+                })?.media ?? 0.0
                 
-                // Extract media where base = 110 and tipoMediaCod = "P", provide default value if nil
+                // Extract media where base = 110 and tipoMediaCod = "P"
                 self.baseL = mediaElements.first(where: {
                     $0.base == 110 && $0.tipoMediaCod.value == "P"
-                })?.media ?? 0.0 // Replace 0.0 with an appropriate default
+                })?.media ?? 0.0
                 
                 // Save both media values
                 self.saveUserData()
-            })
-        
-        // Store the cancellable to manage the subscription lifecycle
-        cancellable.store(in: &self.cancellables)
+            }
+        } catch {
+            // Handle errors appropriately
+            print("Error fetching media: \(error)")
+        }
     }
     
-    func fetchSemaforo(username: String, password: String) {
+    func fetchSemaforo(username: String, password: String) async {
         // Ensure matId is valid
         guard matId != 0 else {
             print("Invalid matId")
@@ -440,198 +402,180 @@ class NetworkManager: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         
-        // Create the data task publisher
-        URLSession.shared.dataTaskPublisher(for: request)
-        // Ensure the response is valid
-            .tryMap { result -> Data in
-                guard let httpResponse = result.response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    throw URLError(.badServerResponse)
-                }
-                return result.data
+        do {
+            // Perform the network request
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Ensure the response is valid
+            if let httpResponse = response as? HTTPURLResponse,
+               !(200...299).contains(httpResponse.statusCode) {
+                throw URLError(.badServerResponse)
             }
-        // Decode the JSON into a Semaforo object
-            .decode(type: Semaforo.self, decoder: JSONDecoder())
-        // Switch to the main thread for UI updates
-            .receive(on: DispatchQueue.main)
-        // Handle the received values
-            .sink(receiveCompletion: { [weak self] completionResult in
-                switch completionResult {
-                case .finished:
-                    // Successfully finished, no action needed
-                    break
-                case .failure(let error):
-                    // Handle the error appropriately
-                    print("Error fetching Semaforo: \(error)")
-                    // Optionally, update UI or notify the user
-                    // self?.semaforo = nil
-                }
-            }, receiveValue: { [weak self] semaforo in
-                guard let self = self else { return }
-                
+            
+            // Decode the JSON into a Semaforo object
+            let semaforo = try JSONDecoder().decode(Semaforo.self, from: data)
+            
+            // Update the published property on the main thread
+            DispatchQueue.main.async {
                 self.semaforo = semaforo
-                // Optionally, update the UI or perform other actions with the data
-            })
-        // Store the cancellable to manage the subscription lifecycle
-            .store(in: &self.cancellables)
+            }
+            
+        } catch {
+            // Handle errors appropriately
+            print("Error fetching Semaforo: \(error)")
+            // Optionally, update the UI or notify the user
+            // DispatchQueue.main.async {
+            //     self.semaforo = nil
+            // }
+        }
     }
     
-    func fetchFatture(username: String, password: String) {
+    func fetchFatture(username: String, password: String) async {
         // Ensure matId is valid
         guard matId != 0 else { return }
         
         // Prepare the Base64 encoded credentials
-        let base64LoginString = "\(username):\(password)"
-            .data(using: .utf8)?
-            .base64EncodedString() ?? ""
+        let credentials = "\(username):\(password)"
+        guard let credentialData = credentials.data(using: .utf8) else {
+            print("Failed to encode credentials")
+            return
+        }
+        let base64LoginString = credentialData.base64EncodedString()
         
         // Construct the URL string
         let urlString = "https://unical.esse3.cineca.it/e3rest/api/tasse-service-v1/lista-fatture/?persId=\(persId)&aaId=\(aaId)"
         
         // Validate the URL
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
         
         // Create the URLRequest and set the Authorization header
         var request = URLRequest(url: url)
         request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         
-        // Create the data task publisher
-        let cancellable = URLSession.shared.dataTaskPublisher(for: request)
-        // Ensure the response is valid
-            .tryMap { result -> Data in
-                guard let httpResponse = result.response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    throw URLError(.badServerResponse)
-                }
-                return result.data
+        do {
+            // Perform the network request
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Ensure the response is valid
+            if let httpResponse = response as? HTTPURLResponse,
+               !(200...299).contains(httpResponse.statusCode) {
+                throw URLError(.badServerResponse)
             }
-        // Decode the JSON into an array of Fattura
-            .decode(type: [Fattura].self, decoder: JSONDecoder())
-        // Switch to the main thread for UI updates
-            .receive(on: DispatchQueue.main)
-        // Handle the received values
-            .sink(receiveCompletion: { completionResult in
-                switch completionResult {
-                case .finished:
-                    // Successfully finished, no action needed
-                    break
-                case .failure(let error):
-                    // Handle the error appropriately
-                    print("Error fetching fatture: \(error)")
-                }
-            }, receiveValue: { [weak self] fatture in
-                guard let self = self else { return }
-                
+            
+            // Decode the JSON into an array of Fattura
+            let fatture = try JSONDecoder().decode([Fattura].self, from: data)
+            
+            // Update the published property on the main thread
+            DispatchQueue.main.async {
                 self.fatture = fatture
-            })
-        
-        // Store the cancellable to manage the subscription lifecycle
-        cancellable.store(in: &self.cancellables)
+            }
+        } catch {
+            // Handle errors appropriately
+            print("Error fetching fatture: \(error)")
+        }
     }
     
     /// Processes the fetched grades and updates the published properties.
     /// - Parameters:
     ///   - prove: Array of `Prova` objects representing exam attempts.
     ///   - righe: Array of `Riga` objects representing course details.
-    func fetchProve(username: String, password: String) {
-            guard matId != 0 else { return }
-            let base64LoginString = "\(username):\(password)".data(using: .utf8)!.base64EncodedString()
-            let proveURLString = "https://unical.esse3.cineca.it/e3rest/api/libretto-service-v2/libretti/\(matId)/prove"
-            let righeURLString = "https://unical.esse3.cineca.it/e3rest/api/libretto-service-v2/libretti/\(matId)/righe"
-            
-            guard let proveURL = URL(string: proveURLString),
-                  let righeURL = URL(string: righeURLString) else { return }
-            
-            var requestProve = URLRequest(url: proveURL)
-            requestProve.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-            
-            var requestRighe = URLRequest(url: righeURL)
-            requestRighe.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-            
-            let provePublisher = URLSession.shared.dataTaskPublisher(for: requestProve)
-                .tryMap { result -> Data in
-                    guard let httpResponse = result.response as? HTTPURLResponse,
-                          (200...299).contains(httpResponse.statusCode) else {
-                        throw URLError(.badServerResponse)
-                    }
-                    return result.data
-                }
-                .decode(type: [Prova].self, decoder: JSONDecoder())
-            
-            let righePublisher = URLSession.shared.dataTaskPublisher(for: requestRighe)
-                .tryMap { result -> Data in
-                    guard let httpResponse = result.response as? HTTPURLResponse,
-                          (200...299).contains(httpResponse.statusCode) else {
-                        throw URLError(.badServerResponse)
-                    }
-                    return result.data
-                }
-                .decode(type: [Riga].self, decoder: JSONDecoder())
-            
-            let cancellable = Publishers.Zip(provePublisher, righePublisher)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completionResult in
-                    switch completionResult {
-                    case .finished:
-                        // Do nothing
-                        break
-                    case .failure(let error):
-                        print("Error fetching grades: \(error)")
-                    }
-                }, receiveValue: { [weak self] prove, righe in
-                    guard let self = self else { return }
-                    self.processGrades(prove: prove, righe: righe)
-                    self.saveUserData() // Update cache with new grades
-                })
-            
-            // Store the cancellable
-            cancellable.store(in: &self.cancellables)
-        }
+    func fetchProve(username: String, password: String) async {
+        guard matId != 0 else { return }
+        let base64LoginString = "\(username):\(password)".data(using: .utf8)!.base64EncodedString()
+        let proveURLString = "https://unical.esse3.cineca.it/e3rest/api/libretto-service-v2/libretti/\(matId)/prove"
+        let righeURLString = "https://unical.esse3.cineca.it/e3rest/api/libretto-service-v2/libretti/\(matId)/righe"
         
-    private func processGrades(prove: [Prova], righe: [Riga]) {
-            let righeDict = Dictionary(uniqueKeysWithValues: righe.map { ($0.adsceId, $0) })
-            var totalCfu = 0.0
-            var votiArray: [Voto] = []
+        guard let proveURL = URL(string: proveURLString),
+              let righeURL = URL(string: righeURLString) else { return }
+        
+        // Use closures to create immutable URLRequests
+        let requestProve: URLRequest = {
+            var request = URLRequest(url: proveURL)
+            request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+            return request
+        }()
+        
+        let requestRighe: URLRequest = {
+            var request = URLRequest(url: righeURL)
+            request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+            return request
+        }()
+        
+        do {
+            // Perform concurrent network requests
+            async let (proveData, _) = URLSession.shared.data(for: requestProve)
+            async let (righeData, _) = URLSession.shared.data(for: requestRighe)
             
-            for prova in prove {
-                guard let riga = righeDict[prova.adsceId],
-                      let esitoFinale = prova.esitoFinale else { continue }
-                
-                // Determine votoValue based on modValCod
-                let votoValue: String?
-                
-                if let modValCod = esitoFinale.modValCod {
-                    if modValCod == "V", let votoDouble = esitoFinale.voto {
-                        votoValue = String(Int(votoDouble))
-                    } else if modValCod == "G", let tipoGiudCod = esitoFinale.tipoGiudCod, !tipoGiudCod.isEmpty {
-                        votoValue = tipoGiudCod
-                    } else {
-                        votoValue = nil // Invalid or unsupported modValCod
-                    }
+            let proveResult = try await proveData
+            let righeResult = try await righeData
+            
+            // Decode the data
+            let prove = try JSONDecoder().decode([Prova].self, from: proveResult)
+            let righe = try JSONDecoder().decode([Riga].self, from: righeResult)
+            
+            // Process grades
+            self.processGrades(prove: prove, righe: righe)
+            
+            // Update UI on the main thread
+            DispatchQueue.main.async {
+                self.saveUserData()
+            }
+        } catch {
+            print("Error fetching grades: \(error)")
+        }
+    }
+    
+    private func processGrades(prove: [Prova], righe: [Riga]) {
+        let righeDict = Dictionary(uniqueKeysWithValues: righe.map { ($0.adsceId, $0) })
+        var totalCfu = 0.0
+        var votiArray: [Voto] = []
+        
+        for prova in prove {
+            guard let riga = righeDict[prova.adsceId],
+                  let esitoFinale = prova.esitoFinale else { continue }
+            
+            // Determine votoValue based on modValCod
+            let votoValue: String?
+            
+            if let modValCod = esitoFinale.modValCod {
+                if modValCod == "V", let votoDouble = esitoFinale.voto {
+                    votoValue = String(Int(votoDouble))
+                } else if modValCod == "G", let tipoGiudCod = esitoFinale.tipoGiudCod, !tipoGiudCod.isEmpty {
+                    votoValue = tipoGiudCod
                 } else {
-                    votoValue = nil // modValCod is missing
+                    votoValue = nil // Invalid or unsupported modValCod
                 }
-                
-                // Skip entries where votoValue is nil
-                guard let validVoto = votoValue else { continue }
-                
-                totalCfu += riga.peso
-                let dateString = String(prova.dataApp.prefix(10))
-                
-                let votoStruct = Voto(
-                    insegnamento: riga.adDes,
-                    voto: validVoto,
-                    cfu: Int(riga.peso),
-                    dataAppello: dateString,
-                    date: dateFormatter.date(from: dateString) ?? Date()
-                )
-                votiArray.append(votoStruct)
+            } else {
+                votoValue = nil // modValCod is missing
             }
             
+            // Skip entries where votoValue is nil
+            guard let validVoto = votoValue else { continue }
+            
+            totalCfu += riga.peso
+            let dateString = String(prova.dataApp.prefix(10))
+            
+            let votoStruct = Voto(
+                insegnamento: riga.adDes,
+                voto: validVoto,
+                cfu: Int(riga.peso),
+                dataAppello: dateString,
+                date: dateFormatter.date(from: dateString) ?? Date()
+            )
+            votiArray.append(votoStruct)
+        }
+        
+        // Update @Published properties on the main thread
+        DispatchQueue.main.async {
             self.currentCfu = totalCfu
             self.voti = votiArray.sorted(by: { $0.date > $1.date })
         }
+    }
     
+    @MainActor
     /// Clears all stored data and cancels any ongoing subscriptions.
     func clearData() {
         self.cdsDes = ""
@@ -654,7 +598,7 @@ class NetworkManager: ObservableObject {
         // Remove cached data
         DataPersistence.shared.save([Voto](), to: "voti.json")
         DataPersistence.shared.save("", to: "userData.json")
-        DataPersistence.shared.save("", to: "schedule.json")
+        DataPersistence.shared.save([Lecture](), to: "schedule.json")
     }
     
     /// Saves the current user data to local storage.

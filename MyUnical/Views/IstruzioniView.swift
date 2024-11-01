@@ -89,7 +89,6 @@ struct IstruzioniView: View {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     HStack {
-                        Image(systemName: "chevron.left") // Optional: Add a back arrow
                         Text("Chiudi")
                     }
                 }

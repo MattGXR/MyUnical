@@ -2,35 +2,6 @@ import SwiftUI
 
 // MARK: - Data Models
 
-/// Represents a lecture with its details.
-struct Lecture: Identifiable, Equatable, Codable {
-    let id: UUID
-    var title: String
-    var day: Weekday
-    var startTime: Date
-    var endTime: Date
-    var location: String?
-    var isDisabled: Bool = false
-    var colorName: String  // Store color as a string name
-    var notes: String?
-    
-    init(
-        id: UUID = UUID(), title: String, day: Weekday, startTime: Date,
-        endTime: Date, location: String?, isDisabled: Bool = false,
-        colorName: String, notes: String?
-    ) {
-        self.id = id
-        self.title = title
-        self.day = day
-        self.startTime = startTime
-        self.endTime = endTime
-        self.location = location
-        self.isDisabled = isDisabled
-        self.colorName = colorName
-        self.notes = notes
-    }
-}
-
 /// Enum for days of the week.
 enum Weekday: String, CaseIterable, Identifiable, Comparable, Codable {
     var id: String { self.rawValue }
@@ -98,7 +69,9 @@ struct WeeklyScheduleView: View {
     @State private var showAddLectureSheet: Bool = false
     @State private var lectureToEdit: Lecture? = nil
     @State private var showNoLecturesAlert: Bool = false
-    @State private var showCurrentLectures: Bool = false  // New State Variable
+    @State private var showCurrentLectures: Bool = false 
+    @State private var isViewVisible: Bool = false
+    
     
     var body: some View {
         NavigationView {
@@ -131,8 +104,13 @@ struct WeeklyScheduleView: View {
                     lectures: $lectures, lectureToEdit: $lectureToEdit)
             }
             .onAppear {
+                isViewVisible = true
                 loadLectures()
                 setInitialDayFilter()
+            }
+            .onDisappear {
+                isViewVisible = false
+                showNoLecturesAlert = false
             }
             .alert(isPresented: $showNoLecturesAlert) {
                 Alert(
@@ -140,7 +118,7 @@ struct WeeklyScheduleView: View {
                     message: Text("Non hai ancora aggiunto nessuna lezione."),
                     dismissButton: .default(Text("OK")))
             }
-            .onChange(of: lectures) { _ in
+            .onChange(of: lectures) {
                 saveLectures()
             }
         }
@@ -184,7 +162,7 @@ struct WeeklyScheduleView: View {
         } else {
             lectures = []
         }
-        if lectures.isEmpty {
+        if lectures.isEmpty && isViewVisible {
             showNoLecturesAlert = true
         }
     }
@@ -226,36 +204,36 @@ struct SearchAndFilterView: View {
             .padding()
             
             // Weekday Picker
-                        Picker("Giorno", selection: $selectedDayFilter) {
-                            Text("Tutti").tag(Weekday?.none)
-                            ForEach(Weekday.allCases) { day in
-                                Text(day.rawValue).tag(Optional(day))
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .padding([.leading, .trailing])
-
-                        // "Ora" Button Positioned Underneath the Weekday Picker
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                showCurrentLectures.toggle()
-                            }) {
-                                Text("Ora")
-                                    .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                                    .background(showCurrentLectures ? Color.blue : Color.clear)
-                                    .foregroundColor(showCurrentLectures ? .white : .blue)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.blue, lineWidth: 1)
-                                    )
-                                    .cornerRadius(5)
-                            }
-                            Spacer()
-                            
-                        }
-                        .padding([.top, .bottom], 8)
-                        //.padding(.trailing, 17)
+            Picker("Giorno", selection: $selectedDayFilter) {
+                Text("Tutti").tag(Weekday?.none)
+                ForEach(Weekday.allCases) { day in
+                    Text(day.rawValue).tag(Optional(day))
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding([.leading, .trailing])
+            
+            // "Ora" Button Positioned Underneath the Weekday Picker
+            HStack {
+                Spacer()
+                Button(action: {
+                    showCurrentLectures.toggle()
+                }) {
+                    Text("Ora")
+                        .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                        .background(showCurrentLectures ? Color.blue : Color.clear)
+                        .foregroundColor(showCurrentLectures ? .white : .blue)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.blue, lineWidth: 1)
+                        )
+                        .cornerRadius(5)
+                }
+                Spacer()
+                
+            }
+            .padding([.top, .bottom], 8)
+            //.padding(.trailing, 17)
         }
     }
 }
@@ -565,7 +543,7 @@ struct AddEditLectureView: View {
                 ) {
                     TextEditor(text: $notes)
                         .frame(height: 100)
-                        .onChange(of: notes) { newValue in
+                        .onChange(of: notes) {
                             if notes.count > noteCharacterLimit {
                                 notes = String(notes.prefix(noteCharacterLimit))
                             }

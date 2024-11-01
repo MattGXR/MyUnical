@@ -1,4 +1,3 @@
-//
 //  FattureModels.swift
 //  MyUnical
 //
@@ -17,9 +16,20 @@ struct Fattura: Codable, Identifiable {
     let desMav1: String
     let fattId: Int
     let pagatoFlg: Int
-    
+
     var pagato: Bool {
-            return pagatoFlg == 1
+        return pagatoFlg == 1
     }
-    
+
+    // Exclude 'id' from the coding keys
+    private enum CodingKeys: String, CodingKey {
+        case codiceAvviso
+        case importoFattura
+        case dataEmissione
+        case scadFattura
+        case dataPagamento
+        case desMav1
+        case fattId
+        case pagatoFlg
+    }
 }

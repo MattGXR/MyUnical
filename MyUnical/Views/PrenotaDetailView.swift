@@ -37,13 +37,13 @@ struct PrenotaDetailView: View {
         .navigationTitle("Dettagli Appello")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true) // Hide default back button
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: { dismiss() }) {
-                            Text("Indietro") // Custom back button text
-                        }
-                    }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    Text("Indietro") // Custom back button text
                 }
+            }
+        }
         .onAppear {
             fetchAppelli()
         }
@@ -129,21 +129,26 @@ struct PrenotaDetailView: View {
     
     // Handle "Iscriviti" action
     private func iscriviti(to appello: Appello) {
+        guard let cdsId = appello.cdsId, let adId = appello.adId else {
+            // Handle the error, maybe show an alert
+            alertMessage = "Dati appello non validi."
+            showAlert = true
+            return
+        }
         isLoading = true
-        networkManager.prenotaAppello(cdsId: appello.cdsId!, adId: appello.adId!, appId: appello.id) { result in
-            DispatchQueue.main.async {
+        Task {
+            do {
+                try await networkManager.prenotaAppello(cdsId: cdsId, adId: adId, appId: appello.id)
                 isLoading = false
-                switch result {
-                case .success:
-                    alertMessage = "Prenotazione effettuata con successo"
-                    showAlert = true
-                    // Optionally, you might want to refresh the appelli list
-                    // fetchAppelli()
-                case .failure(let error):
-                    print("PrenotaDetailView: Error prenotando appello: \(error.localizedDescription)")
-                    alertMessage = "Errore nella prenotazione: \(error.localizedDescription)"
-                    showAlert = true
-                }
+                alertMessage = "Prenotazione effettuata con successo"
+                showAlert = true
+                // Optionally, refresh the appelli list
+                // fetchAppelli()
+            } catch {
+                isLoading = false
+                print("PrenotaDetailView: Error prenotando appello: \(error.localizedDescription)")
+                alertMessage = "Errore nella prenotazione: \(error.localizedDescription)"
+                showAlert = true
             }
         }
     }

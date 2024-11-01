@@ -45,9 +45,9 @@ struct SimulationView: View {
                         Stepper(value: $newVote, in: 18...30) {
                             Text("")
                         }
-                        .onChange(of: newVote) { newValue in
+                        .onChange(of: newVote) {
                             // Reset Valuta Lode when newVote changes from 30 to another value
-                            if newValue != 30 && isValutaLode {
+                            if newVote != 30 && isValutaLode {
                                 isValutaLode = false
                             }
                         }

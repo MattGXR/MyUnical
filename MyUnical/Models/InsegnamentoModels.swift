@@ -1,4 +1,3 @@
-//
 //  InsegnamentoModels.swift
 //  MyUnical
 //
@@ -10,5 +9,11 @@ import Foundation
 struct Insegnamento: Codable, Identifiable {
     let id = UUID()
     let adDes: String
-    let adDefAppId: Int   
+    let adDefAppId: Int
+
+    // Exclude 'id' from the coding keys
+    private enum CodingKeys: String, CodingKey {
+        case adDes
+        case adDefAppId
+    }
 }

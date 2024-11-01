@@ -26,7 +26,7 @@ class AppState: ObservableObject {
         }
     }
     
-    func logout() {
+    @MainActor func logout() {
         // Clear credentials from Keychain
         let keychainService = "it.mattiameligeni.MyUnical"
         KeychainHelper.shared.delete(service: keychainService, account: "username")
