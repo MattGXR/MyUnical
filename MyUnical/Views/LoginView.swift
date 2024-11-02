@@ -8,7 +8,8 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
-    @EnvironmentObject var networkMonitor: NetworkMonitor 
+    @EnvironmentObject var networkMonitor: NetworkMonitor
+    @Environment(\.colorScheme) var colorScheme
     @State private var username = ""
     @State private var password = ""
     @State private var loginFailed = false
@@ -16,13 +17,23 @@ struct LoginView: View {
     @StateObject private var networkManager = NetworkManager.shared
     private let keychainService = "it.mattiameligeni.MyUnical"
     
+    var placeholderColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.7) : Color.black.opacity(0.7)
+    }
+
+    var textFieldBackgroundColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.05)
+    }
+
+    var textFieldForegroundColor: Color {
+        colorScheme == .dark ? Color.white : Color.black
+    }
+    
     var body: some View {
         ZStack {
             // Gradient Background
-            LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0.6)]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-            .ignoresSafeArea()
+            (colorScheme == .dark ? Color.black : Color.white)
+                .ignoresSafeArea()
             
             VStack(spacing: 30) {
                 // App Logo or Name with Animation
@@ -40,21 +51,21 @@ struct LoginView: View {
                 
                 // Username Field
                 CustomTextField(
-                    placeholder: Text("Username").foregroundColor(.white.opacity(0.7)),
+                    placeholder: Text("Username").foregroundColor(placeholderColor),
                     text: $username,
                     imageName: "person",
-                    backgroundColor: Color.white.opacity(0.2),
-                    foregroundColor: .white
+                    backgroundColor: textFieldBackgroundColor,
+                    foregroundColor: textFieldForegroundColor
                 )
                 .padding(.horizontal, 40)
                 
                 // Password Field
                 CustomSecureField(
-                    placeholder: Text("Password").foregroundColor(.white.opacity(0.7)),
+                    placeholder: Text("Password").foregroundColor(placeholderColor),
                     text: $password,
                     imageName: "lock",
-                    backgroundColor: Color.white.opacity(0.2),
-                    foregroundColor: .white
+                    backgroundColor: textFieldBackgroundColor,
+                    foregroundColor: textFieldForegroundColor
                 )
                 .padding(.horizontal, 40)
                 
@@ -69,7 +80,7 @@ struct LoginView: View {
                 if isLoading {
                     ProgressView("Caricamento...")
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .foregroundColor(.white)
+                        .foregroundColor(.blue)
                         .padding()
                         .transition(.opacity)
                 }

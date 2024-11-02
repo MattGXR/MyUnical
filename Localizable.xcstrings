@@ -53,6 +53,12 @@
             "state" : "translated",
             "value" : "© 2024 Mattia Meligeni\nThis app has not been requested nor approved by the University of Calabria"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "© 2024 Mattia Meligeni\nEsta aplicación no ha sido encargada ni aprobada por la Universidad de Calabria."
+          }
         }
       }
     },
@@ -62,6 +68,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilita"
           }
         }
       }
@@ -73,8 +85,15 @@
             "state" : "translated",
             "value" : "Account"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta"
+          }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "Aggiorna dati" : {
       "localizations" : {
@@ -82,6 +101,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reload"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiza datos"
           }
         }
       }
@@ -93,6 +118,12 @@
             "state" : "translated",
             "value" : "Add Lecture"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade Lección"
+          }
         }
       }
     },
@@ -102,6 +133,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You are currently offline, cached data is shown."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualmente estás desconectado, se muestran son los últimos datos disponibles."
           }
         }
       }
@@ -113,6 +150,12 @@
             "state" : "translated",
             "value" : "Cancel"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancela"
+          }
         }
       }
     },
@@ -123,6 +166,12 @@
             "state" : "translated",
             "value" : "Room (optional)"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aula (opcional) "
+          }
         }
       }
     },
@@ -132,6 +181,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aviso"
           }
         }
       }
@@ -144,6 +199,12 @@
             "state" : "translated",
             "value" : "Degree Base"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base Licenciadura"
+          }
         }
       }
     },
@@ -154,6 +215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welcome"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido/a"
           }
         },
         "it" : {
@@ -172,6 +239,12 @@
             "state" : "translated",
             "value" : "Welcome"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenida"
+          }
         }
       }
     },
@@ -183,6 +256,12 @@
             "state" : "translated",
             "value" : "Welcome"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido"
+          }
         }
       }
     },
@@ -192,6 +271,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compute"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calcula"
           }
         }
       }
@@ -203,6 +288,12 @@
             "state" : "translated",
             "value" : "Loading…"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargamento..."
+          }
         }
       }
     },
@@ -212,6 +303,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Degree name: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programa de Estudios: %@"
           }
         }
       }
@@ -223,6 +320,12 @@
             "state" : "translated",
             "value" : "Filter course…"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca enseñanza…"
+          }
         }
       }
     },
@@ -232,6 +335,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filter lectures…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca lecciónes…"
           }
         }
       }
@@ -244,6 +353,12 @@
             "state" : "translated",
             "value" : "Credits"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créditos"
+          }
         }
       }
     },
@@ -255,6 +370,12 @@
             "state" : "translated",
             "value" : "Remaining Credits"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créditos restantes"
+          }
         }
       }
     },
@@ -264,6 +385,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Credits: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créditos: %lld"
           }
         }
       }
@@ -275,6 +402,12 @@
             "state" : "translated",
             "value" : "Discard"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerra"
+          }
         }
       }
     },
@@ -284,6 +417,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Payment Code:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código de pago:"
           }
         }
       }
@@ -295,6 +434,12 @@
             "state" : "translated",
             "value" : "Payment Code: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código de pago: %@"
+          }
         }
       }
     },
@@ -304,6 +449,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Issuer Fiscal Code:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código Fiscal Emisor:"
           }
         }
       }
@@ -315,12 +466,24 @@
             "state" : "translated",
             "value" : "QR Code"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código QR de pago"
+          }
         }
       }
     },
     "Colore" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Color"
@@ -335,6 +498,12 @@
             "state" : "translated",
             "value" : "How to pay"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo Pagar"
+          }
         }
       }
     },
@@ -344,6 +513,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No connection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexión Ausente"
           }
         }
       }
@@ -355,6 +530,12 @@
             "state" : "translated",
             "value" : "Copy Codice Avviso"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia Código de Pago"
+          }
         }
       }
     },
@@ -365,11 +546,30 @@
             "state" : "translated",
             "value" : "Copy Codice Fiscale Ente Creditore"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia Código Fiscal Emisor"
+          }
         }
       }
     },
     "Dashboard" : {
-      "shouldTranslate" : false
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tablero"
+          }
+        }
+      }
     },
     "Data e Ora" : {
       "localizations" : {
@@ -377,6 +577,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date & Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha y Hora"
           }
         }
       }
@@ -386,7 +592,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Date Payed: %@"
+            "value" : "Date Paid: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de Pago: %@"
           }
         }
       }
@@ -398,6 +610,12 @@
             "state" : "translated",
             "value" : "Description: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción: %@"
+          }
         }
       }
     },
@@ -407,6 +625,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exam Details"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles Examen"
           }
         }
       }
@@ -418,6 +642,12 @@
             "state" : "translated",
             "value" : "Lecture Details"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles Lección"
+          }
         }
       }
     },
@@ -427,6 +657,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disable"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshabilita"
           }
         }
       }
@@ -438,6 +674,12 @@
             "state" : "translated",
             "value" : "Contributions"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Donaciones"
+          }
         }
       }
     },
@@ -447,6 +689,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connection required to book an exam"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es necesaria una conexión a internet para reservar un examen"
           }
         }
       }
@@ -458,6 +706,12 @@
             "state" : "translated",
             "value" : "Delete"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina"
+          }
         }
       }
     },
@@ -468,12 +722,24 @@
             "state" : "translated",
             "value" : "Issued: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emisión: %@"
+          }
         }
       }
     },
     "Errore" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error"
@@ -488,6 +754,12 @@
             "state" : "translated",
             "value" : "Payments"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Facturas"
+          }
         }
       }
     },
@@ -497,6 +769,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Register by"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fin Inscripciones"
           }
         }
       }
@@ -508,6 +786,12 @@
             "state" : "translated",
             "value" : "Weekday"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día"
+          }
         }
       }
     },
@@ -518,6 +802,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thursday"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jueves "
           }
         }
       }
@@ -532,6 +822,12 @@
             "state" : "translated",
             "value" : "Amount due: €%.2f"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importe adeudado: €%.2f"
+          }
         }
       }
     },
@@ -541,6 +837,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Amount: €%.2f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importe: €%.2f"
           }
         }
       }
@@ -552,6 +854,12 @@
             "state" : "translated",
             "value" : "Unable to retrieve data: no connection."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposible actualizar los datos: no estás conectado a internet"
+          }
         }
       }
     },
@@ -562,6 +870,12 @@
             "state" : "translated",
             "value" : "Settings"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones"
+          }
         }
       }
     },
@@ -571,6 +885,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrás"
           }
         }
       }
@@ -585,6 +905,12 @@
             "state" : "translated",
             "value" : "Register from"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio Inscripciones"
+          }
         }
       }
     },
@@ -594,6 +920,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid input"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrada no válida"
           }
         }
       }
@@ -605,6 +937,12 @@
             "state" : "translated",
             "value" : "Book"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva "
+          }
         }
       }
     },
@@ -614,6 +952,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instruction"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instrucciones "
           }
         }
       }
@@ -629,6 +973,12 @@
             "state" : "translated",
             "value" : "Your average would exceed %lld."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La media superaría: %lld."
+          }
         }
       }
     },
@@ -637,7 +987,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Booklet"
+            "value" : "Transcript"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Libreto"
           }
         }
       }
@@ -651,6 +1007,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Login failed. Please check your credentials."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso fallido. Compruebe los datos introducidos. "
           }
         }
       }
@@ -666,6 +1028,12 @@
             "state" : "translated",
             "value" : "Monday"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunes"
+          }
         }
       }
     },
@@ -677,6 +1045,12 @@
             "state" : "translated",
             "value" : "Tuesday"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Martes"
+          }
         }
       }
     },
@@ -686,6 +1060,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Student ID: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matrícula: %@"
           }
         }
       }
@@ -698,6 +1078,12 @@
             "state" : "translated",
             "value" : "Average"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media"
+          }
         }
       }
     },
@@ -709,6 +1095,12 @@
             "state" : "translated",
             "value" : "Wednesday"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miércoles"
+          }
         }
       }
     },
@@ -719,6 +1111,12 @@
             "state" : "translated",
             "value" : "Modify"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifica"
+          }
         }
       }
     },
@@ -728,6 +1126,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modify lecture"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifica Lección"
           }
         }
       }
@@ -740,6 +1144,12 @@
             "state" : "translated",
             "value" : "No exams available"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ningún examen disponible"
+          }
         }
       }
     },
@@ -749,6 +1159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No payments available."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna factura disponible."
           }
         }
       }
@@ -760,6 +1176,12 @@
             "state" : "translated",
             "value" : "No lecture"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguna lección "
+          }
         }
       }
     },
@@ -767,6 +1189,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
@@ -781,6 +1209,12 @@
             "state" : "translated",
             "value" : "Nothing else for today"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay nada más que hacer"
+          }
         }
       }
     },
@@ -790,6 +1224,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You haven’t added a lecture yet."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todavía no has añadido lecciones."
           }
         }
       }
@@ -801,6 +1241,12 @@
             "state" : "translated",
             "value" : "Notes"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas"
+          }
         }
       }
     },
@@ -810,6 +1256,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notes (max %lld chars)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas (max %lld caracteres)"
           }
         }
       }
@@ -821,6 +1273,12 @@
             "state" : "translated",
             "value" : "Invoice: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numero Factura: %@"
+          }
         }
       }
     },
@@ -831,6 +1289,12 @@
             "state" : "translated",
             "value" : "Partecipants"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inscritos"
+          }
         }
       }
     },
@@ -840,6 +1304,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New average: %.2f"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva media: %.2f"
           }
         }
       }
@@ -857,6 +1327,12 @@
             "state" : "translated",
             "value" : "Ongoing"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora"
+          }
         }
       }
     },
@@ -866,6 +1342,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starts at"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora"
           }
         }
       }
@@ -877,6 +1359,12 @@
             "state" : "translated",
             "value" : "Ends at"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora Inicio"
+          }
         }
       }
     },
@@ -887,6 +1375,12 @@
             "state" : "translated",
             "value" : "Schedule"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda"
+          }
         }
       }
     },
@@ -896,6 +1390,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paid: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pagado: %@"
           }
         }
       }
@@ -910,6 +1410,12 @@
             "state" : "translated",
             "value" : "In order to pay your invoice, follow these steps:\n\n1. Open “IO” or any other banking app;\n2. Scan the QR code or paste the codes below in “Banks or other channels”.\n3. Complete your transaction, the confirmation will be sent through email.\n\nMake sure to check carefully the details before paying."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para pagar tu factura, sigue estos pasos:\n\n1. Abre “IO” u otra aplicación bancaria;\n2. Escanee el código QR o pegue los datos que siguen en la sección “Bancos u otros canales”.\n3. Complete la transacción, se le enviará un recibo por correo electrónico.\n\nAsegúrarse de comprobar cuidadosamente los detalles antes de finalizar el pago."
+          }
         }
       }
     },
@@ -919,6 +1425,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Book Exams"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva Examen"
           }
         }
       }
@@ -931,6 +1443,12 @@
             "state" : "translated",
             "value" : "Booking succesful"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva efectuada con éxito"
+          }
         }
       }
     },
@@ -940,6 +1458,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chairman"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presidente"
           }
         }
       }
@@ -951,6 +1475,12 @@
             "state" : "translated",
             "value" : "Save"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda"
+          }
         }
       }
     },
@@ -960,6 +1490,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Due: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vencimiento: %@"
           }
         }
       }
@@ -971,6 +1507,12 @@
             "state" : "translated",
             "value" : "If you wish to help maintaining this app and you like the work done, you can donate whichever amount at the following link:"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si quieres ayudar a mantener esta aplicación y valoras el trabajo hecho, puedes donar cualquier cantidad en el siguiente enlace:"
+          }
         }
       }
     },
@@ -981,6 +1523,12 @@
             "state" : "translated",
             "value" : "Report"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Señalización"
+          }
         }
       }
     },
@@ -990,6 +1538,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select Lode Value"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona Valor Lode"
           }
         }
       }
@@ -1002,6 +1556,12 @@
             "state" : "translated",
             "value" : "Yes"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí"
+          }
         }
       }
     },
@@ -1011,6 +1571,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Simulate a new grade"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simula nuevo voto"
           }
         }
       }
@@ -1022,6 +1588,12 @@
             "state" : "translated",
             "value" : "Overlap"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coincidencia"
+          }
         }
       }
     },
@@ -1031,6 +1603,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Payment status"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado pago"
           }
         }
       }
@@ -1042,6 +1620,12 @@
             "state" : "translated",
             "value" : "Fees"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasas"
+          }
         }
       }
     },
@@ -1051,6 +1635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre Lección"
           }
         }
       }
@@ -1062,6 +1652,12 @@
             "state" : "translated",
             "value" : "All"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos"
+          }
         }
       }
     },
@@ -1071,6 +1667,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last grades"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultimos votos"
           }
         }
       }
@@ -1085,6 +1687,12 @@
             "state" : "translated",
             "value" : "Lode value"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valor Lode"
+          }
         }
       }
     },
@@ -1094,6 +1702,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Insert Lode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inserta Lode"
           }
         }
       }
@@ -1106,6 +1720,12 @@
             "state" : "translated",
             "value" : "Friday"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viernes"
+          }
         }
       }
     },
@@ -1116,6 +1736,12 @@
             "state" : "translated",
             "value" : "All Grades"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consulta todos los votos"
+          }
         }
       }
     },
@@ -1125,6 +1751,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grade: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voto: %lld"
           }
         }
       }
