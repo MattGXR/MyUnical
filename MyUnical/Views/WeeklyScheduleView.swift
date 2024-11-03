@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 // MARK: - Data Models
 
@@ -76,8 +77,11 @@ struct WeeklyScheduleView: View {
     @State private var showAddLectureSheet: Bool = false
     @State private var lectureToEdit: Lecture? = nil
     @State private var showNoLecturesAlert: Bool = false
-    @State private var showCurrentLectures: Bool = false 
+    @State private var showNoFeatureAlert: Bool = false
+    @State private var showCurrentLectures: Bool = false
     @State private var isViewVisible: Bool = false
+    @State private var showRecordingsView: Bool = false
+    
     
     
     var body: some View {
@@ -99,6 +103,12 @@ struct WeeklyScheduleView: View {
             }
             .navigationBarTitle("Orario")
             .navigationBarItems(
+                leading: Button(action: {
+                    //showRecordingsView = true
+                    showNoFeatureAlert = true
+                }) {
+                    Image(systemName: "waveform.circle")
+                },
                 trailing: Button(action: {
                     lectureToEdit = nil
                     showAddLectureSheet = true
@@ -109,6 +119,9 @@ struct WeeklyScheduleView: View {
             .sheet(isPresented: $showAddLectureSheet) {
                 AddEditLectureView(
                     lectures: $lectures, lectureToEdit: $lectureToEdit)
+            }
+            .sheet(isPresented: $showRecordingsView) {
+                //Add future RecordingsList view
             }
             .onAppear {
                 isViewVisible = true
@@ -123,6 +136,12 @@ struct WeeklyScheduleView: View {
                 Alert(
                     title: Text("Nessuna lezione"),
                     message: Text("Non hai ancora aggiunto nessuna lezione."),
+                    dismissButton: .default(Text("OK")))
+            }
+            .alert(isPresented: $showNoFeatureAlert) {
+                Alert(
+                    title: Text("Errore"),
+                    message: Text("La funzione non è ancora disponibile"),
                     dismissButton: .default(Text("OK")))
             }
             .onChange(of: lectures) {
@@ -247,6 +266,8 @@ struct SearchAndFilterView: View {
 
 
 // MARK: - Lecture List View
+import SwiftUI
+import AVFoundation
 
 struct LectureListView: View {
     @Binding var lectures: [Lecture]
@@ -254,7 +275,12 @@ struct LectureListView: View {
     @Binding var selectedDayFilter: Weekday?
     @Binding var lectureToEdit: Lecture?
     @Binding var showAddLectureSheet: Bool
-    @Binding var showCurrentLectures: Bool // New Binding
+    @Binding var showCurrentLectures: Bool
+    //@ObservedObject var recordingManager = RecordingManager() Add future recordingmanager
+    
+    // State to manage which lecture is selected for recording
+    @State private var selectedLectureForRecording: Lecture? = nil
+    @State private var showRecordingSheet: Bool = false
     
     var body: some View {
         List {
@@ -283,20 +309,14 @@ struct LectureListView: View {
                                 lectures: lectures
                             )
                             .contentShape(Rectangle())
-                            .contextMenu {
-                                Button(action: {
-                                    lectureToEdit = lecture
-                                    showAddLectureSheet = true
-                                }) {
-                                    Label("Modifica", systemImage: "pencil")
-                                }
-                            }
-                            .swipeActions(edge: .trailing) {
+                            // Trailing Swipe Actions (Delete & Edit)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 Button(role: .destructive) {
                                     deleteLecture(lecture)
                                 } label: {
                                     Label("Elimina", systemImage: "trash")
                                 }
+                                
                                 Button {
                                     lectureToEdit = lecture
                                     showAddLectureSheet = true
@@ -305,7 +325,9 @@ struct LectureListView: View {
                                 }
                                 .tint(.orange)
                             }
-                            .swipeActions(edge: .leading) {
+                            
+                            // Leading Swipe Actions (Enable/Disable & Record)
+                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
                                 Button {
                                     toggleDisableLecture(lecture)
                                 } label: {
@@ -316,6 +338,15 @@ struct LectureListView: View {
                                     }
                                 }
                                 .tint(.gray)
+                                /*
+                                Button {
+                                    selectedLectureForRecording = lecture
+                                    showRecordingSheet = true
+                                } label: {
+                                    Label("Record", systemImage: "mic.fill")
+                                }
+                                .tint(.red)
+                                 */
                             }
                         }
                     }
@@ -323,6 +354,11 @@ struct LectureListView: View {
             }
         }
         .listStyle(InsetGroupedListStyle())
+        .sheet(isPresented: $showRecordingSheet) {
+            if let lecture = selectedLectureForRecording {
+                //RecordingView(lecture: lecture, recordingManager: recordingManager) Add recording view
+            }
+        }
     }
     
     var filteredLectures: [Lecture] {

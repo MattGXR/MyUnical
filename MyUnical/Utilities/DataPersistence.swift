@@ -3,7 +3,6 @@
 //  MyUnical
 //
 //  Created by Mattia Meligeni on 13/10/24.
-//
 
 import Foundation
 
@@ -41,7 +40,6 @@ class DataPersistence {
             return nil
         }
     }
-    
     /// Returns the URL to the app's Documents directory.
     private func getDocumentsDirectory() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

@@ -966,6 +966,22 @@
       "extractionState" : "manual",
       "shouldTranslate" : false
     },
+    "La funzione non è ancora disponibile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feature’s not yet available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La función aún no está disponible"
+          }
+        }
+      }
+    },
     "La media supererebbe %lld." : {
       "localizations" : {
         "en" : {

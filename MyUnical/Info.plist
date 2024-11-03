@@ -7,5 +7,11 @@
 		<string>it</string>
 		<string>en</string>
 	</array>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>MyUnical necessita l'accesso al microfono per registrare le lezioni.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+    </array>
 </dict>
 </plist>
