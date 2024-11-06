@@ -281,6 +281,9 @@
         }
       }
     },
+    "Cancel" : {
+
+    },
     "Caricamento..." : {
       "localizations" : {
         "en" : {
@@ -730,6 +733,9 @@
           }
         }
       }
+    },
+    "Enter new name" : {
+
     },
     "Errore" : {
       "localizations" : {
@@ -1484,6 +1490,18 @@
         }
       }
     },
+    "Recording Name" : {
+
+    },
+    "Recordings" : {
+
+    },
+    "Rename" : {
+
+    },
+    "Rename Recording" : {
+
+    },
     "Salva" : {
       "localizations" : {
         "en" : {
@@ -1499,6 +1517,9 @@
           }
         }
       }
+    },
+    "Save" : {
+
     },
     "Scadenza: %@" : {
       "localizations" : {
@@ -1618,7 +1639,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Payment status"
+            "value" : "Payments status"
           }
         },
         "es" : {
@@ -1660,6 +1681,9 @@
           }
         }
       }
+    },
+    "Total Recordings: %lld" : {
+
     },
     "Tutti" : {
       "localizations" : {

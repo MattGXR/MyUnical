@@ -25,6 +25,7 @@ struct TaxView: View {
                     HStack(spacing: 16) {
                         // Importo Dovuto Text
                         Text("Importo dovuto: €\(importoDovuto, specifier: "%.2f")")
+                            .font(.headline)
                             .foregroundColor(textColor)
                     }
                     .padding(.vertical, 8)
@@ -84,27 +85,35 @@ struct TaxView: View {
     
     private var sortedFatture: [Fattura] {
         networkManager.fatture.sorted {
-            let date1Pagamento = parseDate($0.dataPagamento)
-            let date2Pagamento = parseDate($1.dataPagamento)
+            // Check if dataPagamento is "null" or a valid date string
+            let isNull1 = $0.dataPagamento.lowercased() == "null"
+            let isNull2 = $1.dataPagamento.lowercased() == "null"
             
-            // Determine if dataPagamento is nil
-            let isNil1 = date1Pagamento == nil
-            let isNil2 = date2Pagamento == nil
+            // Parse dates only if dataPagamento is not "null"
+            let date1Pagamento = isNull1 ? nil : parseDate($0.dataPagamento)
+            let date2Pagamento = isNull2 ? nil : parseDate($1.dataPagamento)
             
-            if isNil1 && !isNil2 {
+            // Determine if dataPagamento is missing
+            if isNull1 && !isNull2 {
                 return true
             }
-            if !isNil1 && isNil2 {
+            if !isNull1 && isNull2 {
                 return false
             }
-            if isNil1 && isNil2 {
+            if isNull1 && isNull2 {
                 let emissione1 = parseDate($0.dataEmissione) ?? Date.distantPast
                 let emissione2 = parseDate($1.dataEmissione) ?? Date.distantPast
                 return emissione1 > emissione2
             }
             
             // Both dataPagamento are non-nil
-            return date1Pagamento! > date2Pagamento!
+            // Ensure that parsed dates are valid
+            if let date1 = date1Pagamento, let date2 = date2Pagamento {
+                return date1 > date2
+            }
+            
+            // Fallback in case parsing fails
+            return false
         }
     }
     

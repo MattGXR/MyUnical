@@ -47,7 +47,7 @@ struct RegistrazioniView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Total Recordings: \(viewModel.recordings.count)")) {
+                Section(header: Text("Numero Registrazioni: \(viewModel.recordings.count)")) {
                     ForEach(viewModel.recordings) { recording in
                         RecordingRow(
                             recording: recording,
@@ -62,7 +62,7 @@ struct RegistrazioniView: View {
                 }
             }
             .listStyle(InsetGroupedListStyle())
-            .navigationTitle("Recordings")
+            .navigationTitle("Registrazioni")
             .navigationBarItems(trailing:
                 Button(action: {
                     addNewRecording()
@@ -91,7 +91,7 @@ struct RegistrazioniView: View {
         // Placeholder for adding a new recording
         let newRecording = Recording(
             id: UUID(),
-            title: "New Recording",
+            title: "Nuova Registrazione",
             date: Date()
         )
         viewModel.addRecording(newRecording)
@@ -123,7 +123,7 @@ struct RecordingRow: View {
             Button(action: {
                 renameAction(recording)
             }) {
-                Label("Rename", systemImage: "pencil")
+                Label("Rinomina", systemImage: "pencil")
             }
         }
     }
@@ -148,16 +148,16 @@ struct RenameRecordingView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Enter new name")) {
-                    TextField("Recording Name", text: $newName)
+                Section(header: Text("Inserisci nuovo nome")) {
+                    TextField("Nome Registrazione", text: $newName)
                 }
             }
             .navigationBarTitle("Rename Recording", displayMode: .inline)
             .navigationBarItems(
-                leading: Button("Cancel") {
+                leading: Button("Annulla") {
                     presentationMode.wrappedValue.dismiss()
                 },
-                trailing: Button("Save") {
+                trailing: Button("Salva") {
                     recording.title = newName
                     presentationMode.wrappedValue.dismiss()
                 }

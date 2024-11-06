@@ -5,7 +5,6 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 ## Table of Contents
 
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -19,30 +18,51 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
 - **User Authentication**
   - Secure login using Unical credentials.
   - Credentials are safely stored in the iOS Keychain.
+
 - **Dashboard**
   - Personalized welcome message.
-  - Displays current GPA (Media) and earned credits (CFU).
+  - Displays current GPA (Media), a degree base calculated on the latter, and the earned and remaining credits (CFU).
   - Shows recent grades for quick overview.
-  - Access to the simulation tool for predicting GPA based on potential future grades.
+  - Access to a simulation tool for predicting GPA based on potential future grades.
+
+-  **Simulation Tool**
+   - Simulate potential grades to see their impact on GPA.
+   - Select grade and corresponding credits for accurate predictions.
+
 - **Grades View (Libretto)**
   - Comprehensive list of all grades.
   - Search functionality to filter courses.
   - Detailed view of each grade, including course name, credits, exam date, and score.
-- **Simulation Tool**
-  - Simulate potential grades to see their impact on GPA.
-  - Select grade and corresponding credits for accurate predictions.
+  - Section through which book an exam, providing all the informations about it (date, place, hour, chairman, partecipants and notes).
+
+- **Fees**
+   - Payments Status.
+   - Show invoices list with payment code, the amount, dates (due, payment and issue) and a description.
+   - Payment functionality through QR code (with instructions).
+
+- **Weekly Schedule**
+   - Comprehensivelist of all lectures.
+   - Search functionality to filter the lectures.
+   - Access to the schedule fot each day providing possible overlaps.
+   - Real time update for the schedule of the day.
+   - Add new lectures putting a title, day, hours, place, notes and a color for differentiation.
+   - Filtering function for ongoing lectures.
+
 - **Settings**
   - Manage app settings and preferences.
   - Logout functionality.
+  - Reload functionality.
+  - Information about the user.
+  - Donation section.
+  - Reporting section.
+
 - **Offline Support**
   - Data caching ensures access to grades and academic information without an internet connection.
   - Automatically loads the last fetched data when offline.
+  
 - **Data Synchronization**
   - Silent data fetching upon app launch to update cached data when internet connectivity is available.
 
-## Screenshots
-
-[Link to the pictures](https://postimg.cc/gallery/MTXLvPd)
 
 ## Requirements
 
@@ -76,29 +96,11 @@ MyUnical is a modern and intuitive iOS application designed to help students at 
    - Enter your Unical credentials.
    - Credentials are securely stored using Keychain services.
 
-2. **Dashboard**
+2. **API**
 
-   - View your personalized welcome message.
-   - See your current GPA and earned credits at a glance.
-   - Review your most recent grades.
-   - Access the simulation tool.
+   - The app shows data retrieved from Unical's Esse3 REST Api service.
+   
 
-3. **Grades View (Libretto)**
-
-   - Browse all your grades.
-   - Use the search bar to find specific courses.
-   - Tap on a grade for more details.
-
-4. **Simulation Tool**
-
-   - Accessed via the Dashboard.
-   - Select a potential grade and the corresponding credits.
-   - Calculate to see the impact on your GPA.
-
-5. **Settings**
-
-   - Manage app settings.
-   - Logout when needed.
 
 ## Privacy and Data Security
 
@@ -120,5 +122,5 @@ This project is licensed under the **MyUnical Non-Commercial License**. See the 
 For any questions or suggestions, please contact:
 
 - **Name**: Mattia Meligeni
-- **Email**: [info@mattiameligeni.it](mailto:info@mattiameligeni.it)
+- **Email**: [myunical@mattiameligeni.it](mailto:myunical@mattiameligeni.it)
 - **GitHub**: [github.com/MattGXR](https://github.com/MattGXR)
