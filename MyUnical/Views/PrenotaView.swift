@@ -1,7 +1,7 @@
 // PrenotaView.swift
 // MyUnical
 //
-// Created by Mattia Meligeni on [Date].
+// Created by Mattia Meligeni on 13/10/2024.
 //
 
 import SwiftUI
@@ -12,7 +12,11 @@ struct PrenotaView: View {
 
     var body: some View {
         NavigationView {
-            List(networkManager.insegnamenti) { insegnamento in
+            List(
+                networkManager.insegnamenti.filter {
+                    !$0.adDes.localizedCaseInsensitiveContains("TIROCINIO")
+                }
+            ) { insegnamento in
                 NavigationLink(destination: PrenotaDetailView(insegnamento: insegnamento)) {
                     HStack {
                         Image(systemName: "book.closed")

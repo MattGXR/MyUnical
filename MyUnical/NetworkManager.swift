@@ -27,7 +27,6 @@ class NetworkManager: ObservableObject {
     @Published var sex: String = ""
     @Published var insegnamenti: [Insegnamento] = []
     @Published var isFetching: Bool = false
-    @Published var semaforo: Semaforo?
     @Published var fatture: [Fattura] = []
     @Published var persId: Int = 0
     @Published var aaId: Int = 0
@@ -86,7 +85,6 @@ class NetworkManager: ObservableObject {
                         await self.fetchMedia(username: username, password: password)
                         await self.fetchProve(username: username, password: password)
                         await self.fetchInsegnamenti(username: username, password: password)
-                        await self.fetchSemaforo(username: username, password: password)
                         await self.fetchFatture(username: username, password: password)
                         DispatchQueue.main.async {
                             completion(true)
@@ -371,62 +369,6 @@ class NetworkManager: ObservableObject {
         } catch {
             // Handle errors appropriately
             print("Error fetching media: \(error)")
-        }
-    }
-    
-    func fetchSemaforo(username: String, password: String) async {
-        // Ensure matId is valid
-        guard matId != 0 else {
-            print("Invalid matId")
-            return
-        }
-        
-        // Prepare the Base64 encoded credentials
-        let credentials = "\(username):\(password)"
-        guard let credentialData = credentials.data(using: .utf8) else {
-            print("Failed to encode credentials")
-            return
-        }
-        let base64LoginString = credentialData.base64EncodedString()
-        
-        // Construct the URL string
-        let urlString = "https://unical.esse3.cineca.it/e3rest/api/tasse-service-v1/semaforo/\(stuId)"
-        
-        // Validate the URL
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL")
-            return
-        }
-        
-        // Create the URLRequest and set the Authorization header
-        var request = URLRequest(url: url)
-        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-        
-        do {
-            // Perform the network request
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            // Ensure the response is valid
-            if let httpResponse = response as? HTTPURLResponse,
-               !(200...299).contains(httpResponse.statusCode) {
-                throw URLError(.badServerResponse)
-            }
-            
-            // Decode the JSON into a Semaforo object
-            let semaforo = try JSONDecoder().decode(Semaforo.self, from: data)
-            
-            // Update the published property on the main thread
-            DispatchQueue.main.async {
-                self.semaforo = semaforo
-            }
-            
-        } catch {
-            // Handle errors appropriately
-            print("Error fetching Semaforo: \(error)")
-            // Optionally, update the UI or notify the user
-            // DispatchQueue.main.async {
-            //     self.semaforo = nil
-            // }
         }
     }
     

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaxView: View {
-    @EnvironmentObject var networkMonitor: NetworkMonitor // Access NetworkMonitor
+    @EnvironmentObject var networkMonitor: NetworkMonitor
     @ObservedObject private var networkManager = NetworkManager.shared
     
     // State variables to handle sheet presentation
@@ -19,59 +19,51 @@ struct TaxView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                Form {
-                    // Situazione Pagamenti Section
-                    Section(header: Text("Stato pagamenti")) {
-                        HStack(spacing: 16) {
-                            // Colored Circle
-                            Circle()
-                                .fill(circleColor())
-                                .frame(width: 20, height: 20)
-                            
-                            // Importo Dovuto Text
-                            Text("Importo dovuto: €\(networkManager.semaforo?.importoDovuto ?? 0.0, specifier: "%.2f")")
-                                .foregroundColor(textColor())
-                        }
-                        .padding(.vertical, 8)
+            List {
+                // Situazione Pagamenti Section
+                Section(header: Text("Stato pagamenti")) {
+                    HStack(spacing: 16) {
+                        // Importo Dovuto Text
+                        Text("Importo dovuto: €\(importoDovuto, specifier: "%.2f")")
+                            .foregroundColor(textColor)
                     }
-                    
-                    // Fatture Section
-                    Section(header: Text("Fatture")) {
-                        if networkManager.fatture.isEmpty {
-                            Text("Nessuna fattura disponibile.")
-                                .foregroundColor(.gray)
-                        } else {
-                            List(sortedFatture) { fattura in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Numero Fattura: \(String(fattura.fattId))")
-                                        .font(.headline)
-                                        .foregroundColor(getNumeroFatturaColor(fattura))
-                                    
-                                    Text("Codice Avviso: \(fattura.codiceAvviso)")
-                                    Text("Importo: €\(fattura.importoFattura,specifier: "%.2f")")
-                                    Text("Emissione: \(fattura.dataEmissione)")
-                                    Text("Scadenza: \(fattura.scadFattura)")
-                                    Text("Data Pagamento: \(fattura.dataPagamento)")
-                                    Text("Descrizione: \(fattura.desMav1)")
-                                    
-                                    Text("Pagato: \(fattura.pagato ? NSLocalizedString("Sì", comment: "") : NSLocalizedString("No", comment: ""))")
-                                    
-                                    // Add button if pagato is "Si"
-                                    if !fattura.pagato {
-                                        Button(action: {
-                                            selectedFattura = fattura
-                                            
-                                        }) {
-                                            Text("Come Pagare")
-                                                .font(.subheadline)
-                                                .foregroundColor(.blue)
-                                        }
-                                        .padding(.top, 4)
+                    .padding(.vertical, 8)
+                }
+                
+                // Fatture Section
+                Section(header: Text("Fatture")) {
+                    if networkManager.fatture.isEmpty {
+                        Text("Nessuna fattura disponibile.")
+                            .foregroundColor(.gray)
+                    } else {
+                        ForEach(sortedFatture) { fattura in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Numero Fattura: \(String(fattura.fattId))")
+                                    .font(.headline)
+                                    .foregroundColor(getNumeroFatturaColor(fattura))
+                                
+                                Text("Codice Avviso: \(fattura.codiceAvviso)")
+                                Text("Importo: €\(fattura.importoFattura, specifier: "%.2f")")
+                                Text("Emissione: \(fattura.dataEmissione)")
+                                Text("Scadenza: \(fattura.scadFattura)")
+                                Text("Data Pagamento: \(fattura.dataPagamento)")
+                                Text("Descrizione: \(fattura.desMav1)")
+                                
+                                Text("Pagato: \(fattura.pagato ? NSLocalizedString("Sì", comment: "") : NSLocalizedString("No", comment: ""))")
+                                
+                                // Add button if pagato is "No"
+                                if !fattura.pagato {
+                                    Button(action: {
+                                        selectedFattura = fattura
+                                    }) {
+                                        Text("Come Pagare")
+                                            .font(.subheadline)
+                                            .foregroundColor(.blue)
                                     }
+                                    .padding(.top, 4)
                                 }
-                                .padding(.vertical, 4)
                             }
+                            .padding(.vertical, 4)
                         }
                     }
                 }
@@ -84,45 +76,52 @@ struct TaxView: View {
         }
     }
     
+    var importoDovuto: Double {
+        return networkManager.fatture
+            .filter { $0.dataPagamento == "null" }
+            .reduce(0) { $0 + $1.importoFattura }
+    }
+    
     private var sortedFatture: [Fattura] {
-        networkManager.fatture.sorted { (f1, f2) -> Bool in
-            guard let date1 = parseDate(f1.scadFattura),
-                  let date2 = parseDate(f2.scadFattura) else {
+        networkManager.fatture.sorted {
+            let date1Pagamento = parseDate($0.dataPagamento)
+            let date2Pagamento = parseDate($1.dataPagamento)
+            
+            // Determine if dataPagamento is nil
+            let isNil1 = date1Pagamento == nil
+            let isNil2 = date2Pagamento == nil
+            
+            if isNil1 && !isNil2 {
+                return true
+            }
+            if !isNil1 && isNil2 {
                 return false
             }
-            return date1 < date2
+            if isNil1 && isNil2 {
+                let emissione1 = parseDate($0.dataEmissione) ?? Date.distantPast
+                let emissione2 = parseDate($1.dataEmissione) ?? Date.distantPast
+                return emissione1 > emissione2
+            }
+            
+            // Both dataPagamento are non-nil
+            return date1Pagamento! > date2Pagamento!
         }
     }
     
-    private func parseDate(_ dateString: String) -> Date? {
+    private func parseDate(_ dateString: String?) -> Date? {
+        guard let dateString = dateString else { return nil }
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         return formatter.date(from: dateString)
     }
     
-    private func circleColor() -> Color {
-        switch networkManager.semaforo?.semaforo.uppercased() {
-        case "VERDE":
-            return .green
-        case "GIALLO":
+    // Computed property to determine text color based on importoDovuto
+    private var textColor: Color {
+        if importoDovuto > 0 {
             return .yellow
-        case "ROSSO":
-            return .red
-        default:
-            return .gray
-        }
-    }
-    
-    // Helper function to determine text color based on semaforo value
-    private func textColor() -> Color {
-        switch networkManager.semaforo?.semaforo.uppercased() {
-        case "VERDE":
+        } else if importoDovuto == 0 {
             return .green
-        case "GIALLO":
-            return .yellow
-        case "ROSSO":
-            return .red
-        default:
+        } else {
             return .black
         }
     }

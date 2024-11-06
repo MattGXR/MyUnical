@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @EnvironmentObject var networkMonitor: NetworkMonitor // Access NetworkMonitor
+    @EnvironmentObject var networkMonitor: NetworkMonitor
     @ObservedObject private var networkManager = NetworkManager.shared
     @Binding var selectedTab: Int
     @State private var showSimulation = false
@@ -118,10 +118,6 @@ struct DashboardView: View {
     }
 }
 
-// DashboardCard.swift
-
-import SwiftUI
-
 struct DashboardCard: View {
     let title: String
     let value: String
@@ -143,10 +139,6 @@ struct DashboardCard: View {
         .cornerRadius(15)
     }
 }
-
-// GradeRow.swift
-
-import SwiftUI
 
 struct GradeRow: View {
     let voto: Voto

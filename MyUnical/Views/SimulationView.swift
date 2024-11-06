@@ -18,7 +18,6 @@ struct SimulationView: View {
     @State private var showCappedMessage = false
     @FocusState private var isInputActive: Bool
     
-    // New State Variables for Valuta Lode
     @State private var isValutaLode: Bool = false
     @State private var selectedValutaLode: Double = 33 // Default value
     
@@ -33,18 +32,21 @@ struct SimulationView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView { // Changed to ScrollView for better handling on smaller screens
+            ScrollView {
                 VStack(spacing: 15) {
-                    
-                    
-                    // Voto Input using Stepper
+                
                     HStack {
-                        Text("Voto: \(newVote)")
+                        Text("Voto:")
                             .font(.headline)
-                        Spacer()
-                        Stepper(value: $newVote, in: 18...30) {
+                        /*Stepper(value: $newVote, in: 18...30) {
                             Text("")
+                        }*/
+                        Picker("Voto", selection: $newVote) {
+                            ForEach(18...30, id: \.self) { value in
+                                Text("\(value)")
+                            }
                         }
+                        Spacer()
                         .onChange(of: newVote) {
                             // Reset Valuta Lode when newVote changes from 30 to another value
                             if newVote != 30 && isValutaLode {

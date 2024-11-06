@@ -40,7 +40,7 @@ struct GradesView: View {
                         }
                     }
                     .padding(7)
-                    .background(Color(.systemGray5))
+                    .background(Color(.systemGray6))
                     .cornerRadius(8)
                     .padding(.horizontal)
                     .animation(.default, value: isSearching)

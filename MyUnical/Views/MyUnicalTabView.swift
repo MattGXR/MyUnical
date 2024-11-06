@@ -33,27 +33,20 @@ struct MyUnicalTabView: View {
                     Image(systemName: "dollarsign.circle.fill")
                     Text("Tasse")
                 }
+                .tag(2)
             WeeklyScheduleView()
                 .tabItem {
                     Image(systemName: "calendar")
                     Text("Orario")
                 }
-                .tag(2)
+                .tag(3)
             SettingsView()
                 .tabItem {
                     Image(systemName: "gear")
                     Text("Impostazioni")
                 }
-                .tag(2)
+                .tag(4)
         }
-        // Removed .onAppear { refreshData() } to prevent unnecessary data fetching
     }
 }
 
-struct MyUnicalTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MyUnicalTabView()
-            .environmentObject(AppState())
-            .environmentObject(NetworkMonitor.shared)
-    }
-}

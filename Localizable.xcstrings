@@ -951,7 +951,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Instruction"
+            "value" : "Instructions"
           }
         },
         "es" : {
@@ -1761,18 +1761,34 @@
         }
       }
     },
-    "Voto: %lld" : {
+    "Voto" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grade: %lld"
+            "value" : "Grade"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voto: %lld"
+            "value" : "Voto"
+          }
+        }
+      }
+    },
+    "Voto:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grade:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voto:"
           }
         }
       }
