@@ -143,6 +143,17 @@
         }
       }
     },
+    "Altre Banche" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other Banks"
+          }
+        }
+      }
+    },
     "Annulla" : {
       "localizations" : {
         "en" : {
@@ -155,6 +166,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancela"
+          }
+        }
+      }
+    },
+    "App IO" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IO App"
           }
         }
       }
@@ -280,9 +302,6 @@
           }
         }
       }
-    },
-    "Cancel" : {
-
     },
     "Caricamento..." : {
       "localizations" : {
@@ -442,6 +461,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Código de pago: %@"
+          }
+        }
+      }
+    },
+    "Codice Copiato!" : {
+      "comment" : "Copy confirmation message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied Succesfully!"
           }
         }
       }
@@ -734,9 +764,6 @@
         }
       }
     },
-    "Enter new name" : {
-
-    },
     "Errore" : {
       "localizations" : {
         "en" : {
@@ -936,6 +963,9 @@
         }
       }
     },
+    "Inserisci nuovo nome" : {
+
+    },
     "Iscriviti" : {
       "localizations" : {
         "en" : {
@@ -1126,6 +1156,17 @@
         }
       }
     },
+    "Metodo di Pagamento" : {
+      "comment" : "Payment Method Picker Label",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payment Method"
+          }
+        }
+      }
+    },
     "Modifica" : {
       "localizations" : {
         "en" : {
@@ -1224,6 +1265,9 @@
         }
       }
     },
+    "Nome Registrazione" : {
+
+    },
     "Non c'è nient'altro da fare" : {
       "localizations" : {
         "en" : {
@@ -1319,6 +1363,9 @@
           }
         }
       }
+    },
+    "Numero Registrazioni: %lld" : {
+
     },
     "Nuova media: %.2f" : {
       "localizations" : {
@@ -1425,18 +1472,52 @@
     "Password" : {
       "shouldTranslate" : false
     },
-    "Per effettuare il pagamento della tua fattura, segui questi passaggi:\n\n1. Apri l'app IO o altra app bancaria;\n2. Inquadra il codice QR o incolla i dati sottostanti nella sezione \"Banche o altri canali\".\n3. Completa la transazione, ti sarà inviata la ricevuta via email.\n\nAssicurati di controllare attentamente i dettagli prima di finalizzare il pagamento." : {
+    "Per effettuare il pagamento della tua fattura tramite altre banche, segui questi passaggi:\n\n1. Apri la tua app bancaria preferita;\n2. Vai alla sezione \"Pagamenti\" e seleziona \"PagoPA\" come metodo di pagamento;\n3. Inquadra il codice QR o inserisci manualmente i dati della fattura;\n4. Completa la transazione, la ricevuta sarà disponibile in app." : {
+      "comment" : "Instructions for paying via Other Banks",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In order to pay your invoice, follow these steps:\n\n1. Open “IO” or any other banking app;\n2. Scan the QR code or paste the codes below in “Banks or other channels”.\n3. Complete your transaction, the confirmation will be sent through email.\n\nMake sure to check carefully the details before paying."
+            "value" : "To make the payment of your invoice via other banks, follow these steps:\n\n1. Open your preferred banking app;\n2. Go to the \"Payments\" section and select \"PagoPA\" as the payment method;\n3. Scan the QR code or manually enter the invoice data;\n4. Complete the transaction; the receipt will be available in the app."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Para pagar tu factura, sigue estos pasos:\n\n1. Abre “IO” u otra aplicación bancaria;\n2. Escanee el código QR o pegue los datos que siguen en la sección “Bancos u otros canales”.\n3. Complete la transacción, se le enviará un recibo por correo electrónico.\n\nAsegúrarse de comprobar cuidadosamente los detalles antes de finalizar el pago."
+            "value" : "Para realizar el pago de tu factura a través de otros bancos, sigue estos pasos:\n\n1. Abre tu aplicación bancaria preferida;\n2. Ve a la sección \"Pagos\" y selecciona \"PagoPA\" como método de pago;\n3. Escanea el código QR o ingresa manualmente los datos de la factura;\n4. Completa la transacción; el recibo estará disponible en la aplicación."
+          }
+        }
+      }
+    },
+    "Per effettuare il pagamento della tua fattura tramite App IO (Raccomandato), segui questi passaggi:\n\n1. Apri l'app IO;\n2. Seleziona la sezione \"Inquadra\";\n3. Inquadra il codice QR, caricane uno screenshot o inserisci manualmente i dati della fattura che puoi copiare in questa pagina nella sezione \"Digita\";\n4. Completa la transazione, la ricevuta ti sarà inviata via email e sarà anche disponibile in app." : {
+      "comment" : "Instructions for paying via App IO",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To make the payment of your invoice via IO App (Recommended), follow these steps:\n\n1. Open the IO app;\n2. Select the \"Scan\" section;\n3. Scan the QR code, upload a screenshot, or manually enter the invoice data that you can copy on this page in the input section;\n4. Complete the transaction; the receipt will be sent to your email and will also be available in the app."
+          }
+        }
+      }
+    },
+    "Per effettuare il pagamento della tua fattura tramite Postepay, segui questi passaggi:\n\n1. Apri l'app Postepay;\n2. Vai alla sezione \"Operazioni\" e seleziona \"Bollette e Pagamenti\";\n3. Inquadra il codice QR o inserisci manualmente i dati della fattura disponibili in questa pagina selezionando \"Compila manualmente\" poi Avvisi pagoPA e infine \"Banche e altri canali\";\n4. Completa la transazione, la ricevuta sarà disponibile in app." : {
+      "comment" : "Instructions for paying via Postepay",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To make the payment of your invoice via Postepay, follow these steps:\n\n1. Open the Postepay app;\n2. Go to the “Operazioni” section and select “Bollette e pagamenti”;\n3. Scan the QR code or manually enter the invoice data available on this page by selecting “Compila manualmente”, then “Avvisi “pagoPA, and finally “Banche e altri canali”;\n4. Complete the transaction; the receipt will be available in the app."
+          }
+        }
+      }
+    },
+    "Postepay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postepay App"
           }
         }
       }
@@ -1490,16 +1571,13 @@
         }
       }
     },
-    "Recording Name" : {
-
-    },
-    "Recordings" : {
-
-    },
-    "Rename" : {
+    "Registrazioni" : {
 
     },
     "Rename Recording" : {
+
+    },
+    "Rinomina" : {
 
     },
     "Salva" : {
@@ -1517,9 +1595,6 @@
           }
         }
       }
-    },
-    "Save" : {
-
     },
     "Scadenza: %@" : {
       "localizations" : {
@@ -1681,9 +1756,6 @@
           }
         }
       }
-    },
-    "Total Recordings: %lld" : {
-
     },
     "Tutti" : {
       "localizations" : {

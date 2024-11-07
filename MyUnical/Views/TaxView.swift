@@ -127,7 +127,7 @@ struct TaxView: View {
     // Computed property to determine text color based on importoDovuto
     private var textColor: Color {
         if importoDovuto > 0 {
-            return .yellow
+            return .orange
         } else if importoDovuto == 0 {
             return .green
         } else {
