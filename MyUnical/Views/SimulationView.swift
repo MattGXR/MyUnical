@@ -38,15 +38,14 @@ struct SimulationView: View {
                     HStack {
                         Text("Voto:")
                             .font(.headline)
-                        /*Stepper(value: $newVote, in: 18...30) {
-                            Text("")
-                        }*/
+                        
+                        Spacer()
+                        
                         Picker("Voto", selection: $newVote) {
                             ForEach(18...30, id: \.self) { value in
                                 Text("\(value)")
                             }
                         }
-                        Spacer()
                         .onChange(of: newVote) {
                             // Reset Valuta Lode when newVote changes from 30 to another value
                             if newVote != 30 && isValutaLode {
@@ -61,7 +60,7 @@ struct SimulationView: View {
                     
                     // CFU Input using Picker
                     VStack(alignment: .leading) {
-                        Text("CFU")
+                        Text("CFU:")
                             .font(.headline)
                         Picker("CFU", selection: $selectedCFU) {
                             ForEach(cfuOptions, id: \.self) { cfu in

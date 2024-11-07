@@ -118,7 +118,7 @@ struct WeeklyScheduleView: View {
             )
             .sheet(isPresented: $showAddLectureSheet) {
                 AddEditLectureView(
-                    lectures: $lectures, lectureToEdit: $lectureToEdit)
+                    lectures: $lectures, lectureToEdit: $lectureToEdit, selectedWeekDay: $selectedDayFilter)
             }
             .sheet(isPresented: $showRecordingsView) {
                 //Add future RecordingsList view
@@ -127,6 +127,7 @@ struct WeeklyScheduleView: View {
                 isViewVisible = true
                 loadLectures()
                 setInitialDayFilter()
+                showCurrentLectures = true
             }
             .onDisappear {
                 isViewVisible = false
@@ -238,12 +239,26 @@ struct SearchAndFilterView: View {
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding([.leading, .trailing])
+            .onChange(of: selectedDayFilter) {
+                if selectedDayFilter != currentWeekday() {
+                    showCurrentLectures = false
+                }
+            }
             
             // "Ora" Button Positioned Underneath the Weekday Picker
             HStack {
                 Spacer()
                 Button(action: {
-                    showCurrentLectures.toggle()
+                    if showCurrentLectures {
+                        // If "Ora" filter is active, deactivate it and reset selectedDayFilter
+                        showCurrentLectures = false
+                    } else {
+                        // If not active, activate "Ora" filter and set selectedDayFilter to today
+                        showCurrentLectures = true
+                        if selectedDayFilter != currentWeekday() {
+                            selectedDayFilter = currentWeekday()
+                        }
+                    }
                 }) {
                     Text("Ora")
                         .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
@@ -260,6 +275,25 @@ struct SearchAndFilterView: View {
             }
             .padding([.top, .bottom], 8)
             //.padding(.trailing, 17)
+        }
+    }
+    /// Returns the current weekday as a `Weekday` enum.
+    func currentWeekday() -> Weekday? {
+        let weekdayNumber = Calendar.current.component(.weekday, from: Date())
+        // Sunday = 1, Monday = 2, ..., Saturday = 7
+        switch weekdayNumber {
+        case 2:
+            return .Lunedì
+        case 3:
+            return .Martedì
+        case 4:
+            return .Mercoledì
+        case 5:
+            return .Giovedì
+        case 6:
+            return .Venerdì
+        default:
+            return nil
         }
     }
 }
@@ -285,20 +319,23 @@ struct LectureListView: View {
     var body: some View {
         List {
             if filteredLectures.isEmpty {
-                // Display "Urrà" message if no lectures are available
                 Section {
                     VStack {
-                        Image(systemName: "party.popper.fill")
+                        Spacer()
+                        Image(systemName: "exclamationmark.magnifyingglass")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 100)
+                            .frame(height: 70)
                             .foregroundColor(.blue)
-                        Text("Non c'è nient'altro da fare")
+                        Text("Non c'è nulla qui")
                             .font(.title2)
                             .multilineTextAlignment(.center)
                             .padding()
+                        
+                       
                     }
                     .frame(maxWidth: .infinity)
+                    
                 }
             } else {
                 ForEach(groupedLectures.keys.sorted(), id: \.self) { day in
@@ -339,13 +376,13 @@ struct LectureListView: View {
                                 }
                                 .tint(.gray)
                                 /*
-                                Button {
-                                    selectedLectureForRecording = lecture
-                                    showRecordingSheet = true
-                                } label: {
-                                    Label("Record", systemImage: "mic.fill")
-                                }
-                                .tint(.red)
+                                 Button {
+                                 selectedLectureForRecording = lecture
+                                 showRecordingSheet = true
+                                 } label: {
+                                 Label("Record", systemImage: "mic.fill")
+                                 }
+                                 .tint(.red)
                                  */
                             }
                         }
@@ -365,7 +402,7 @@ struct LectureListView: View {
         lectures.filter { lecture in
             let matchesSearchText = searchText.isEmpty || lecture.title.localizedCaseInsensitiveContains(searchText)
             let matchesDayFilter = selectedDayFilter == nil || lecture.day == selectedDayFilter
-            let matchesCurrentLecture = !showCurrentLectures || isLectureCurrentlyOngoing(lecture)
+            let matchesCurrentLecture = !showCurrentLectures || (isLectureCurrentlyOngoing(lecture) && !lecture.isDisabled)
             return matchesSearchText && matchesDayFilter && matchesCurrentLecture
         }
     }
@@ -522,6 +559,7 @@ struct AddEditLectureView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var lectures: [Lecture]
     @Binding var lectureToEdit: Lecture?
+    @Binding var selectedWeekDay: Weekday?
     
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -608,6 +646,7 @@ struct AddEditLectureView: View {
         }
         .onAppear {
             UIDatePicker.appearance().minuteInterval = 15
+            selectedDay = selectedWeekDay ?? .Lunedì
         }
         .alert(isPresented: $showAlert) {
             Alert(

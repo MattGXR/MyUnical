@@ -401,6 +401,16 @@
         }
       }
     },
+    "CFU:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credits:"
+          }
+        }
+      }
+    },
     "CFU: %lld" : {
       "localizations" : {
         "en" : {
@@ -1268,18 +1278,12 @@
     "Nome Registrazione" : {
 
     },
-    "Non c'è nient'altro da fare" : {
+    "Non c'è nulla qui" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nothing else for today"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay nada más que hacer"
+            "value" : "Nothing here"
           }
         }
       }
@@ -1410,13 +1414,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Starts at"
+            "value" : "Ends at"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hora"
+            "value" : "Hora final"
           }
         }
       }
@@ -1426,7 +1430,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ends at"
+            "value" : "Starts at"
           }
         },
         "es" : {
@@ -1574,10 +1578,10 @@
     "Registrazioni" : {
 
     },
-    "Rename Recording" : {
+    "Rinomina" : {
 
     },
-    "Rinomina" : {
+    "Rinomina Registrazione" : {
 
     },
     "Salva" : {

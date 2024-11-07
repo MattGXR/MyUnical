@@ -152,7 +152,7 @@ struct RenameRecordingView: View {
                     TextField("Nome Registrazione", text: $newName)
                 }
             }
-            .navigationBarTitle("Rename Recording", displayMode: .inline)
+            .navigationBarTitle("Rinomina Registrazione", displayMode: .inline)
             .navigationBarItems(
                 leading: Button("Annulla") {
                     presentationMode.wrappedValue.dismiss()

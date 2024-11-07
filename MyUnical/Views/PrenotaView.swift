@@ -7,16 +7,39 @@
 import SwiftUI
 
 struct PrenotaView: View {
-    @Environment(\.dismiss) private var dismiss 
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject private var networkManager = NetworkManager.shared
-
+    
+    // Computed property to get filtered and unique insegnamenti
+    var uniqueInsegnamenti: [Insegnamento] {
+            // Step 1: Filter out entries containing "TIROCINIO" (case insensitive)
+            let filtered = networkManager.insegnamenti
+                .filter { !$0.adDes.localizedCaseInsensitiveContains("TIROCINIO") }
+            
+            // Step 2: Remove duplicates based on adDes and adDefAppId
+            var seenKeys = Set<String>()
+            let unique = filtered.filter { insegnamento in
+                // Create a unique key by combining adDes (lowercased for case-insensitivity) and adDefAppId
+                let key = "\(insegnamento.adDes.lowercased())_\(insegnamento.adDefAppId)"
+                if seenKeys.contains(key) {
+                    return false // Duplicate found, exclude from the result
+                } else {
+                    seenKeys.insert(key)
+                    return true // Unique entry, include in the result
+                }
+            }
+            
+            // Step 3: Sort the unique entries alphabetically based on adDes
+            let sorted = unique.sorted { lhs, rhs in
+                lhs.adDes.localizedCaseInsensitiveCompare(rhs.adDes) == .orderedAscending
+            }
+            
+            return sorted
+        }
+    
     var body: some View {
         NavigationView {
-            List(
-                networkManager.insegnamenti.filter {
-                    !$0.adDes.localizedCaseInsensitiveContains("TIROCINIO")
-                }
-            ) { insegnamento in
+            List(uniqueInsegnamenti) { insegnamento in
                 NavigationLink(destination: PrenotaDetailView(insegnamento: insegnamento)) {
                     HStack {
                         Image(systemName: "book.closed")

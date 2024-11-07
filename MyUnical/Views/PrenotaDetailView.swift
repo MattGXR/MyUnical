@@ -13,13 +13,13 @@ struct PrenotaDetailView: View {
     
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
-    @State private var shouldDismiss: Bool = false // New State Variable
+    @State private var shouldDismiss: Bool = false
     @State private var isLoading: Bool = false
     @State private var appelli: [Appello] = []
-    @Environment(\.dismiss) private var dismiss // For navigation back
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        VStack(alignment: .center, spacing: 16) { // Changed alignment to .center
+        VStack(alignment: .center, spacing: 16) {
             headerView
             
             if isLoading {
@@ -34,7 +34,7 @@ struct PrenotaDetailView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure VStack takes full space
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationTitle("Dettagli Appello")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true) // Hide default back button
@@ -107,6 +107,7 @@ struct PrenotaDetailView: View {
     
     private func fetchAppelli() {
         isLoading = true
+        
         networkManager.fetchAppelli(adId: insegnamento.adDefAppId) { result in
             DispatchQueue.main.async {
                 isLoading = false
@@ -122,8 +123,8 @@ struct PrenotaDetailView: View {
                 case .failure(let error):
                     // Optionally, handle specific errors differently
                     print("PrenotaDetailView: Error fetching appelli: \(error.localizedDescription)")
-                    alertMessage = "Errore nel recupero degli appelli: \(error.localizedDescription)"
-                    shouldDismiss = false // Do not dismiss on error
+                    alertMessage = "Errore nel recupero degli appelli."
+                    shouldDismiss = true // Do not dismiss on error
                     showAlert = true // Or present a different alert based on the error
                 }
             }
