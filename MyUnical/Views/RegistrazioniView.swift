@@ -6,34 +6,192 @@
 //
 
 import SwiftUI
+import AVFoundation
+import AVKit
 
 // MARK: - Model
 
-struct Recording: Identifiable {
+struct Recording: Identifiable, Codable, Equatable {
     let id: UUID
     var title: String
     let date: Date
-    // Removed duration and fileURL since we're not including actual recordings
-}
+    var fileRelativePath: String
 
-// Sample Data
-let sampleRecordings = [
-    Recording(id: UUID(), title: "Team Meeting", date: Date()),
-    Recording(id: UUID(), title: "Lecture Notes", date: Date().addingTimeInterval(-86400)),
-    Recording(id: UUID(), title: "Interview", date: Date().addingTimeInterval(-172800))
-]
+    // Equatable conformance
+    static func == (lhs: Recording, rhs: Recording) -> Bool {
+        return lhs.id == rhs.id &&
+               lhs.title == rhs.title &&
+               lhs.date == rhs.date &&
+               lhs.fileRelativePath == rhs.fileRelativePath
+    }
+}
 
 // MARK: - ViewModel
 
 class RecordingsViewModel: ObservableObject {
-    @Published var recordings: [Recording] = sampleRecordings
-    
-    func deleteRecording(at offsets: IndexSet) {
-        recordings.remove(atOffsets: offsets)
+    @Published var recordings: [Recording] = []
+    @Published var isRecording = false
+    @Published var recordingPermissionsGranted = false
+    @Published var currentlyPlayingRecording: Recording?
+    @Published var isPlaying = false
+
+    var audioRecorder: AVAudioRecorder?
+    var audioPlayer: AVAudioPlayer?
+    let recordingSession = AVAudioSession.sharedInstance()
+
+    let dataPersistence = DataPersistence.shared
+    let recordingsFilename = "recordings.json"
+
+    init() {
+        requestPermission()
+        loadRecordings()
+        setupAudioSession()
     }
-    
-    func addRecording(_ recording: Recording) {
-        recordings.append(recording)
+
+    // MARK: - Permissions
+
+    func requestPermission() {
+        recordingSession.requestRecordPermission { [weak self] allowed in
+            DispatchQueue.main.async {
+                self?.recordingPermissionsGranted = allowed
+                if allowed {
+                    do {
+                        try self?.recordingSession.setCategory(.playAndRecord, mode: .default)
+                        try self?.recordingSession.setActive(true)
+                    } catch {
+                        print("Failed to set up recording session: \(error)")
+                    }
+                } else {
+                    print("Recording permission not granted.")
+                }
+            }
+        }
+    }
+
+    // MARK: - Recording Functions
+
+    func startRecording() {
+        let filename = "\(UUID().uuidString).m4a"
+        let audioFilename = getDocumentsDirectory().appendingPathComponent(filename)
+
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 44100, // Standard sample rate for quality audio
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+
+        do {
+            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
+            audioRecorder?.record()
+            isRecording = true
+        } catch {
+            print("Could not start recording: \(error)")
+        }
+    }
+
+    func stopRecording() {
+        audioRecorder?.stop()
+        isRecording = false
+
+        if let url = audioRecorder?.url {
+            let relativePath = url.lastPathComponent
+            let newRecording = Recording(id: UUID(), title: "Nuova Registrazione", date: Date(), fileRelativePath: relativePath)
+            recordings.insert(newRecording, at: 0)
+            saveRecordings()
+        }
+
+        audioRecorder = nil
+    }
+
+    func deleteRecording(at offsets: IndexSet) {
+        for index in offsets {
+            let recording = recordings[index]
+            do {
+                let fileURL = getDocumentsDirectory().appendingPathComponent(recording.fileRelativePath)
+                try FileManager.default.removeItem(at: fileURL)
+            } catch {
+                print("Failed to delete recording: \(error)")
+            }
+        }
+        recordings.remove(atOffsets: offsets)
+        saveRecordings()
+    }
+
+    // MARK: - Playback Functions
+
+    func play(_ recording: Recording) {
+        let fileURL = getDocumentsDirectory().appendingPathComponent(recording.fileRelativePath)
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            audioPlayer?.play()
+            currentlyPlayingRecording = recording
+            isPlaying = true
+        } catch {
+            print("Failed to play recording: \(error)")
+        }
+    }
+
+    func pause() {
+        audioPlayer?.pause()
+        isPlaying = false
+    }
+
+    func stop() {
+        audioPlayer?.stop()
+        audioPlayer = nil
+        currentlyPlayingRecording = nil
+        isPlaying = false
+    }
+
+    // MARK: - Data Persistence
+
+    func loadRecordings() {
+        if let savedRecordings: [Recording] = dataPersistence.load(recordingsFilename, as: [Recording].self) {
+            self.recordings = savedRecordings
+        } else {
+            self.recordings = []
+        }
+    }
+
+    func saveRecordings() {
+        dataPersistence.save(recordings, to: recordingsFilename)
+    }
+
+    func renameRecording(_ recording: Recording, newName: String) {
+        let newFilename = "\(newName).m4a"
+        let oldURL = getDocumentsDirectory().appendingPathComponent(recording.fileRelativePath)
+        let newURL = getDocumentsDirectory().appendingPathComponent(newFilename)
+        do {
+            try FileManager.default.moveItem(at: oldURL, to: newURL)
+            if let index = recordings.firstIndex(where: { $0.id == recording.id }) {
+                recordings[index].title = newFilename
+                recordings[index].fileRelativePath = newFilename
+                saveRecordings()
+            }
+        } catch {
+            print("Failed to rename recording: \(error)")
+        }
+    }
+
+    // MARK: - Helper Functions
+
+    /// Returns the URL to the app's Documents directory.
+    private func getDocumentsDirectory() -> URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+
+    func shareRecording(_ recording: Recording) -> URL {
+        getDocumentsDirectory().appendingPathComponent(recording.fileRelativePath)
+    }
+
+    private func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set audio session category: \(error)")
+        }
     }
 }
 
@@ -43,58 +201,110 @@ struct RegistrazioniView: View {
     @ObservedObject var viewModel = RecordingsViewModel()
     @State private var selectedRecordingIndex: Int?
     @State private var isShowingRenameSheet = false
-    
+    @State private var searchText = ""
+    @State private var selectedRecording: Recording?
+
+    var filteredRecordings: [Recording] {
+        if searchText.isEmpty {
+            return viewModel.recordings
+        } else {
+            return viewModel.recordings.filter { $0.title.lowercased().contains(searchText.lowercased()) }
+        }
+    }
+
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("Numero Registrazioni: \(viewModel.recordings.count)")) {
-                    ForEach(viewModel.recordings) { recording in
-                        RecordingRow(
-                            recording: recording,
-                            renameAction: renameRecording
-                        )
-                    }
-                    .onDelete { indexSet in
-                        withAnimation {
-                            viewModel.deleteRecording(at: indexSet)
+            VStack {
+                if viewModel.recordingPermissionsGranted {
+                    recordingsList
+                        .listStyle(InsetGroupedListStyle())
+                        .navigationTitle("Registrazioni")
+                        .searchable(text: $searchText, prompt: "Cerca registrazioni")
+                        .toolbar {
+                            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                                recordButton
+                            }
                         }
-                    }
-                }
-            }
-            .listStyle(InsetGroupedListStyle())
-            .navigationTitle("Registrazioni")
-            .navigationBarItems(trailing:
-                Button(action: {
-                    addNewRecording()
-                }) {
-                    Image(systemName: "plus")
-                }
-            )
-            .sheet(isPresented: $isShowingRenameSheet) {
-                if let index = selectedRecordingIndex {
-                    RenameRecordingView(recording: $viewModel.recordings[index])
+                        .sheet(isPresented: $isShowingRenameSheet) {
+                            if let index = selectedRecordingIndex {
+                                RenameRecordingView(
+                                    recording: $viewModel.recordings[index],
+                                    onSave: { newName in
+                                        viewModel.renameRecording(viewModel.recordings[index], newName: newName)
+                                    }
+                                )
+                            }
+                        }
+                } else {
+                    Text("Permesso di registrazione non concesso. Controlla le impostazioni.")
+                        .padding()
                 }
             }
         }
     }
-    
+
+    // MARK: - Subviews
+
+    private var recordingsList: some View {
+        List {
+            Section(header: Text("Numero Registrazioni: \(filteredRecordings.count)")) {
+                ForEach(filteredRecordings) { recording in
+                    recordingRow(for: recording)
+                }
+                .onDelete(perform: viewModel.deleteRecording)
+            }
+        }
+    }
+
+    private func recordingRow(for recording: Recording) -> some View {
+        RecordingRow(recording: recording, viewModel: viewModel)
+            .contextMenu {
+                Button(action: {
+                    renameRecording(recording)
+                }) {
+                    Label("Rinomina", systemImage: "pencil")
+                }
+                Button(role: .destructive, action: {
+                    if let index = viewModel.recordings.firstIndex(where: { $0.id == recording.id }) {
+                        viewModel.deleteRecording(at: IndexSet(integer: index))
+                    }
+                }) {
+                    Label("Elimina", systemImage: "trash")
+                }
+            }
+            .swipeActions(edge: .trailing) {
+                Button {
+                    let url = viewModel.shareRecording(recording)
+                    let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                    UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
+                } label: {
+                    Label("Condividi", systemImage: "square.and.arrow.up")
+                }
+                .tint(.blue)
+            }
+    }
+
+    private var recordButton: some View {
+        Button(action: {
+            if viewModel.isRecording {
+                viewModel.stopRecording()
+            } else {
+                viewModel.startRecording()
+            }
+        }) {
+            Image(systemName: viewModel.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                .font(.system(size: 28))
+                .foregroundColor(viewModel.isRecording ? .red : .blue)
+        }
+    }
+
     // MARK: - Actions
-    
+
     func renameRecording(_ recording: Recording) {
         if let index = viewModel.recordings.firstIndex(where: { $0.id == recording.id }) {
             selectedRecordingIndex = index
             isShowingRenameSheet = true
         }
-    }
-    
-    func addNewRecording() {
-        // Placeholder for adding a new recording
-        let newRecording = Recording(
-            id: UUID(),
-            title: "Nuova Registrazione",
-            date: Date()
-        )
-        viewModel.addRecording(newRecording)
     }
 }
 
@@ -102,13 +312,26 @@ struct RegistrazioniView: View {
 
 struct RecordingRow: View {
     let recording: Recording
-    let renameAction: (Recording) -> Void
-    
+    @ObservedObject var viewModel: RecordingsViewModel
+
     var body: some View {
         HStack {
-            Image(systemName: "waveform.circle.fill")
-                .font(.largeTitle)
-                .foregroundColor(.blue)
+            Button(action: {
+                if viewModel.currentlyPlayingRecording == recording {
+                    if viewModel.isPlaying {
+                        viewModel.pause()
+                    } else {
+                        viewModel.play(recording)
+                    }
+                } else {
+                    viewModel.stop()
+                    viewModel.play(recording)
+                }
+            }) {
+                Image(systemName: playButtonImageName)
+                    .font(.title)
+                    .foregroundColor(playButtonColor)
+            }
             VStack(alignment: .leading) {
                 Text(recording.title)
                     .font(.headline)
@@ -117,24 +340,75 @@ struct RecordingRow: View {
                     .foregroundColor(.gray)
             }
             Spacer()
-        }
-        .padding(.vertical, 8)
-        .contextMenu {
-            Button(action: {
-                renameAction(recording)
-            }) {
-                Label("Rinomina", systemImage: "pencil")
+            if viewModel.currentlyPlayingRecording == recording {
+                AudioPlayerControls(viewModel: viewModel)
             }
         }
+        .padding(.vertical, 8)
+        .swipeActions(edge: .leading) {
+            Button(role: .destructive) {
+                if let index = viewModel.recordings.firstIndex(where: { $0.id == recording.id }) {
+                    viewModel.deleteRecording(at: IndexSet(integer: index))
+                }
+            } label: {
+                Label("Elimina", systemImage: "trash")
+            }
+        }
+        .swipeActions(edge: .trailing) {
+            Button {
+                let url = viewModel.shareRecording(recording)
+                let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
+            } label: {
+                Label("Condividi", systemImage: "square.and.arrow.up")
+            }
+            .tint(.blue)
+        }
     }
-    
-    // MARK: - Helpers
-    
+
+    private var playButtonImageName: String {
+        if viewModel.currentlyPlayingRecording == recording {
+            return viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill"
+        } else {
+            return "play.circle"
+        }
+    }
+
+    private var playButtonColor: Color {
+        viewModel.currentlyPlayingRecording == recording ? .blue : .gray
+    }
+
     func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+}
+
+struct AudioPlayerControls: View {
+    @ObservedObject var viewModel: RecordingsViewModel
+
+    var body: some View {
+        HStack(spacing: 20) {
+            Button(action: {
+                viewModel.stop()
+            }) {
+                Image(systemName: "stop.fill")
+                    .foregroundColor(.red)
+            }
+            
+            Button(action: {
+                if viewModel.isPlaying {
+                    viewModel.pause()
+                } else if let currentRecording = viewModel.currentlyPlayingRecording {
+                    viewModel.play(currentRecording)
+                }
+            }) {
+                Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                    .foregroundColor(.blue)
+            }
+        }
     }
 }
 
@@ -144,7 +418,8 @@ struct RenameRecordingView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var recording: Recording
     @State private var newName: String = ""
-    
+    var onSave: (String) -> Void
+
     var body: some View {
         NavigationView {
             Form {
@@ -158,13 +433,15 @@ struct RenameRecordingView: View {
                     presentationMode.wrappedValue.dismiss()
                 },
                 trailing: Button("Salva") {
-                    recording.title = newName
+                    onSave(newName)
+                    recording.title = "\(newName).m4a"
+                    recording.fileRelativePath = "\(newName).m4a"
                     presentationMode.wrappedValue.dismiss()
                 }
                 .disabled(newName.isEmpty)
             )
             .onAppear {
-                newName = recording.title
+                newName = recording.title.replacingOccurrences(of: ".m4a", with: "")
             }
         }
     }

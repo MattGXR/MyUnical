@@ -46,6 +46,7 @@ struct PrenotaDetailView: View {
             }
         }
         .onAppear {
+            appelli.removeAll()
             fetchAppelli()
         }
         .alert(isPresented: $showAlert) {
@@ -143,7 +144,7 @@ struct PrenotaDetailView: View {
         isLoading = true
         Task {
             do {
-                try await networkManager.prenotaAppello(cdsId: cdsId, adId: adId, appId: appello.id)
+                try await networkManager.prenotaAppello(cdsId: cdsId, adId: adId, appId: appello.id, adDes: insegnamento.adDes)
                 isLoading = false
                 alertMessage = NSLocalizedString("Prenotazione effettuata con successo", comment: "")
                 shouldDismiss = true // Set to true to dismiss on success
@@ -152,8 +153,7 @@ struct PrenotaDetailView: View {
                 // await fetchAppelli()
             } catch {
                 isLoading = false
-                print("PrenotaDetailView: Error prenotando appello: \(error.localizedDescription)")
-                alertMessage = "Errore nella prenotazione: \(error.localizedDescription)"
+                alertMessage = "Errore nella prenotazione: \(error.self)"
                 shouldDismiss = false // Do not dismiss on booking error
                 showAlert = true
             }

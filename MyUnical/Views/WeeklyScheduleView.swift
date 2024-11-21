@@ -32,8 +32,6 @@ enum Weekday: String, CaseIterable, Identifiable, Comparable, Codable {
     }
 }
 
-// MARK: - Predefined Colors
-
 /// Predefined color options.
 struct ColorOption: Identifiable, Equatable, Hashable {
     let id = UUID()
@@ -56,8 +54,6 @@ let predefinedColors: [ColorOption] = [
 func colorFromName(_ name: String) -> Color {
     predefinedColors.first(where: { $0.colorName == name })?.color ?? .blue
 }
-
-// MARK: - Helper Functions
 
 /// Helper function to create a Date with specific hour and minute.
 func timeFor(hour: Int, minute: Int) -> Date {
@@ -113,15 +109,17 @@ struct WeeklyScheduleView: View {
                     lectureToEdit = nil
                     showAddLectureSheet = true
                 }) {
-                    Image(systemName: "plus")
+                    Image(systemName: "plus.circle")
+                      
                 }
+                
             )
             .sheet(isPresented: $showAddLectureSheet) {
                 AddEditLectureView(
                     lectures: $lectures, lectureToEdit: $lectureToEdit, selectedWeekDay: $selectedDayFilter)
             }
             .sheet(isPresented: $showRecordingsView) {
-                //Add future RecordingsList view
+                RegistrazioniView()
             }
             .onAppear {
                 isViewVisible = true
@@ -250,14 +248,15 @@ struct SearchAndFilterView: View {
                 Spacer()
                 Button(action: {
                     if showCurrentLectures {
-                        // If "Ora" filter is active, deactivate it and reset selectedDayFilter
                         showCurrentLectures = false
                     } else {
-                        // If not active, activate "Ora" filter and set selectedDayFilter to today
-                        showCurrentLectures = true
-                        if selectedDayFilter != currentWeekday() {
-                            selectedDayFilter = currentWeekday()
+                        if selectedDayFilter != nil && currentWeekday() != nil {
+                            showCurrentLectures = true
+                            if selectedDayFilter != currentWeekday() {
+                                selectedDayFilter = currentWeekday()
+                            }
                         }
+                        
                     }
                 }) {
                     Text("Ora")
@@ -273,8 +272,12 @@ struct SearchAndFilterView: View {
                 Spacer()
                 
             }
+            .onAppear {
+                if selectedDayFilter == nil {
+                    showCurrentLectures = false
+                }
+            }
             .padding([.top, .bottom], 8)
-            //.padding(.trailing, 17)
         }
     }
     /// Returns the current weekday as a `Weekday` enum.

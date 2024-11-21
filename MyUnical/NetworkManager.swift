@@ -23,6 +23,8 @@ class NetworkManager: ObservableObject {
     @Published var baseL: Double = 0.0
     @Published var currentCfu: Double = 0.0
     @Published var voti: [Voto] = []
+    var righe: [Riga] = []
+    @Published var prenotazioni: [Prenotazioni] = []
     @Published var userName: String = ""
     @Published var sex: String = ""
     @Published var insegnamenti: [Insegnamento] = []
@@ -236,12 +238,19 @@ class NetworkManager: ObservableObject {
         }
     }
     
-    func prenotaAppello(cdsId: Int, adId: Int, appId: Int) async throws {
+    func prenotaAppello(cdsId: Int, adId: Int, appId: Int, adDes: String) async throws {
         enum NetworkError: Error {
             case invalidURL
             case missingCredentials
             case invalidMatId
-            case badServerResponse
+            case badServerResponse(String)
+        }
+        
+        var adsceId: Int = 0
+        for riga in self.righe {
+            if riga.adDes == adDes {
+                adsceId = riga.adsceId
+            }
         }
         
         // Ensure matId is valid
@@ -279,10 +288,12 @@ class NetworkManager: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         
+        
+        
         // If your API requires a body, add it here
         // For example:
-        // let body: [String: Any] = ["key": "value"]
-        // request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        let body: [String: Any] = ["adsceId": adsceId]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
         
         do {
             // Perform the network request
@@ -291,19 +302,26 @@ class NetworkManager: ObservableObject {
             // Validate response status code
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 201 {
-                    // Success
+                    print("Success")
                     return
                 } else {
+                    // Try to parse the error message from the response body
                     if let dataString = String(data: data, encoding: .utf8) {
                         print("NetworkManager: Server returned status code \(httpResponse.statusCode): \(dataString)")
+                        
+                        // Parse JSON for error details
+                        if let jsonData = dataString.data(using: .utf8),
+                           let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+                           let retErrMsg = json["retErrMsg"] as? String {
+                            throw NetworkError.badServerResponse(retErrMsg)
+                        }
                     }
-                    throw NetworkError.badServerResponse
+                    throw NetworkError.badServerResponse("Unknown error occurred.")
                 }
             } else {
                 throw URLError(.badServerResponse)
             }
         } catch {
-            print("NetworkManager: Error prenotando Appello: \(error.localizedDescription)")
             throw error
         }
     }
@@ -456,10 +474,10 @@ class NetworkManager: ObservableObject {
             
             // Decode the data
             let prove = try JSONDecoder().decode([Prova].self, from: proveResult)
-            let righe = try JSONDecoder().decode([Riga].self, from: righeResult)
+            self.righe = try JSONDecoder().decode([Riga].self, from: righeResult)
             
             // Process grades
-            self.processGrades(prove: prove, righe: righe)
+            self.processGrades(prove: prove, righe: self.righe)
             
             // Update UI on the main thread
             DispatchQueue.main.async {
@@ -474,6 +492,7 @@ class NetworkManager: ObservableObject {
         let righeDict = Dictionary(uniqueKeysWithValues: righe.map { ($0.adsceId, $0) })
         var totalCfu = 0.0
         var votiArray: [Voto] = []
+        var appelli: [Prenotazioni] = []
         
         for prova in prove {
             guard let riga = righeDict[prova.adsceId],
@@ -494,11 +513,21 @@ class NetworkManager: ObservableObject {
                 votoValue = nil // modValCod is missing
             }
             
+            let dateString = String(prova.dataApp.prefix(10))
+            let dateFormatter = DateFormatter() // Inline date formatter
+            dateFormatter.dateFormat = "dd/MM/yyyy" // Match the input format
+
+            if let dateAppello = dateFormatter.date(from: dateString), dateAppello > Date() {
+                let appello = Prenotazioni(insegnamento: riga.adDes, dataAppello: dateString)
+                appelli.append(appello)
+            }
+           
+            
             // Skip entries where votoValue is nil
             guard let validVoto = votoValue else { continue }
             
             totalCfu += riga.peso
-            let dateString = String(prova.dataApp.prefix(10))
+            //let dateString = String(prova.dataApp.prefix(10))
             
             let votoStruct = Voto(
                 insegnamento: riga.adDes,
@@ -514,6 +543,7 @@ class NetworkManager: ObservableObject {
         DispatchQueue.main.async {
             self.currentCfu = totalCfu
             self.voti = votiArray.sorted(by: { $0.date > $1.date })
+            self.prenotazioni = appelli
         }
     }
     

@@ -181,6 +181,9 @@
         }
       }
     },
+    "Appelli Prenotati" : {
+
+    },
     "Aula (opzionale)" : {
       "localizations" : {
         "en" : {
@@ -367,6 +370,9 @@
         }
       }
     },
+    "Cerca registrazioni" : {
+
+    },
     "CFU" : {
       "comment" : "CFU",
       "localizations" : {
@@ -549,6 +555,9 @@
           }
         }
       }
+    },
+    "Condividi" : {
+
     },
     "Connessione Assente" : {
       "localizations" : {
@@ -1515,6 +1524,12 @@
         }
       }
     },
+    "Per via di limitazioni dell'app di Esse3 agli accessi esterni, per il momento non si può interagire con gli appelli prenotati né vedere altri dettagli." : {
+
+    },
+    "Permesso di registrazione non concesso. Controlla le impostazioni." : {
+
+    },
     "Postepay" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1558,6 +1573,9 @@
           }
         }
       }
+    },
+    "Prenotazioni" : {
+
     },
     "Presidente" : {
       "localizations" : {

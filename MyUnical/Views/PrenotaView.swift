@@ -39,15 +39,27 @@ struct PrenotaView: View {
     
     var body: some View {
         NavigationView {
-            List(uniqueInsegnamenti) { insegnamento in
-                NavigationLink(destination: PrenotaDetailView(insegnamento: insegnamento)) {
-                    HStack {
-                        Image(systemName: "book.closed")
-                            .foregroundColor(.blue)
-                        Text(insegnamento.adDes)
-                            .font(.body)
-                            .padding(.vertical, 8)
+            VStack {
+                List(uniqueInsegnamenti) { insegnamento in
+                    NavigationLink(destination: PrenotaDetailView(insegnamento: insegnamento)) {
+                        HStack {
+                            Image(systemName: "book.closed")
+                                .foregroundColor(.blue)
+                            Text(insegnamento.adDes)
+                                .font(.body)
+                                .padding(.vertical, 8)
+                        }
                     }
+                }
+                // Button at the bottom
+                NavigationLink(destination: PrenotazioniView()) {
+                    Text("Appelli Prenotati")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                        .padding([.horizontal, .bottom], 16)
                 }
             }
             .navigationTitle("Prenota Appelli")

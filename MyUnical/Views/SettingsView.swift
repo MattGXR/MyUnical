@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
-    @EnvironmentObject var networkMonitor: NetworkMonitor // Ensure NetworkMonitor is available
+    @EnvironmentObject var networkMonitor: NetworkMonitor 
     @ObservedObject private var networkManager = NetworkManager.shared
     @State private var username: String = ""
     private let keychainService = "it.mattiameligeni.MyUnical"
